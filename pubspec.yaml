@@ -40,6 +40,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/calendar.png"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -51,22 +56,22 @@ flutter:
   fonts:
     - family: Raleway
       fonts:
-        - asset: fonts/Raleway-Regular.ttf
-        - asset: fonts/Raleway-Italic.ttf
+        - asset: assets/fonts/Raleway-Regular.ttf
+        - asset: assets/fonts/Raleway-Italic.ttf
           style: italic
     - family: Roboto
       fonts:
-        - asset: fonts/Roboto-Regular.ttf
-        - asset: fonts/Roboto-Italic.ttf
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Italic.ttf
           style: italic
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/bg-main.jpg
-    - images/bg-main2.jpg
-    - images/ic_switch_camera_3.png
-    - images/ic_shutter_1.png
+    - assets/images/bg-main.jpg
+    - assets/images/bg-main2.jpg
+    - assets/images/ic_switch_camera_3.png
+    - assets/images/ic_shutter_1.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

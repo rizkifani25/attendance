@@ -114,7 +114,7 @@ class _CardDetailContentState extends State<CardDetailContent> with WidgetsBindi
                           child: Container(
                             padding: EdgeInsets.all(4.0),
                             child: Image.asset(
-                              'images/ic_switch_camera_3.png',
+                              'assets/images/ic_switch_camera_3.png',
                               color: Colors.grey[200],
                               width: 42.0,
                               height: 42.0,
@@ -135,7 +135,7 @@ class _CardDetailContentState extends State<CardDetailContent> with WidgetsBindi
                           child: Container(
                             padding: EdgeInsets.all(4.0),
                             child: Image.asset(
-                              'images/ic_shutter_1.png',
+                              'assets/images/ic_shutter_1.png',
                               width: 72.0,
                               height: 72.0,
                             ),

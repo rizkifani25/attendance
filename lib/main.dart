@@ -33,7 +33,7 @@ class AttendanceApp extends StatelessWidget {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("images/bg-main2.jpg"),
+              image: AssetImage("assets/images/bg-main2.jpg"),
               fit: BoxFit.cover,
             ),
           ),
