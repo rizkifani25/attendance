@@ -4,14 +4,15 @@ import 'package:attendance/models/pages.dart';
 import 'package:attendance/pages/home/widgets/class-page-content.dart';
 import 'package:attendance/pages/home/widgets/home-page-content.dart';
 import 'package:attendance/pages/home/widgets/profile-page-content.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-  final String title;
+  final List<CameraDescription> cameras;
+  HomePage(this.cameras);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
           physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           children: <Widget>[
             ClassPageContent(),
-            HomePageContent(),
+            HomePageContent(widget.cameras),
             ProfilePageContent(),
           ],
           onPageChanged: (page) {
@@ -66,23 +67,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildWidgetMainMenuHomePage(BuildContext buildContext) {
-    var mediaQuery = MediaQuery.of(buildContext);
-
     return Container(
       margin: EdgeInsets.only(
-        top: mediaQuery.size.height / 11,
+        top: MediaQuery.of(buildContext).size.height / 18.5,
         left: 10,
         right: 10,
       ),
       alignment: Alignment.topCenter,
-      child: Row(
+      child: Flex(
+        direction: Axis.horizontal,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.all(7.0),
-            margin: EdgeInsets.all(7.0),
+            margin: EdgeInsets.only(
+              top: 7.0,
+              bottom: 7.0,
+              left: 7.0,
+              right: MediaQuery.of(context).size.width / 10,
+            ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
               color: currentPage == 0 ? Colors.indigo[900] : Colors.transparent,
             ),
             child: GestureDetector(
@@ -92,12 +97,22 @@ class _HomePageState extends State<HomePage> {
                   _controller.jumpToPage(0);
                 });
               },
-              child: Text(
-                'Class',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white70,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Icon(
+                    Icons.event_note_rounded,
+                    color: currentPage == 0 ? Colors.white : Colors.indigo[700],
+                    size: 22.0,
+                  ),
+                  Text(
+                    'Class',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: currentPage == 0 ? Colors.white : Colors.indigo[700],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -105,7 +120,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.all(7.0),
             margin: EdgeInsets.all(7.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
               color: currentPage == 1 ? Colors.indigo[900] : Colors.transparent,
             ),
             child: GestureDetector(
@@ -115,20 +130,35 @@ class _HomePageState extends State<HomePage> {
                   _controller.jumpToPage(1);
                 });
               },
-              child: Text(
-                'Events',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white70,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Icon(
+                    Icons.home_rounded,
+                    color: currentPage == 1 ? Colors.white : Colors.indigo[700],
+                    size: 22.0,
+                  ),
+                  Text(
+                    'Home',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: currentPage == 1 ? Colors.white : Colors.indigo[700],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
           Container(
             padding: EdgeInsets.all(7.0),
-            margin: EdgeInsets.all(7.0),
+            margin: EdgeInsets.only(
+              top: 7.0,
+              bottom: 7.0,
+              left: MediaQuery.of(context).size.width / 10,
+              right: 7.0,
+            ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
               color: currentPage == 2 ? Colors.indigo[900] : Colors.transparent,
             ),
             child: GestureDetector(
@@ -138,12 +168,22 @@ class _HomePageState extends State<HomePage> {
                   _controller.jumpToPage(2);
                 });
               },
-              child: Text(
-                'Profile',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white70,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: currentPage == 2 ? Colors.white : Colors.indigo[700],
+                    size: 22.0,
+                  ),
+                  Text(
+                    'Profile',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: currentPage == 2 ? Colors.white : Colors.indigo[700],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

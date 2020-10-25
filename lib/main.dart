@@ -30,11 +30,20 @@ class AttendanceApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        backgroundColor: Colors.blue[900],
-        body: HomePage(
-          title: "Attendance v0.1",
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/bg-main2.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: HomePage(cameras),
         ),
       ),
+      // routes: <String, WidgetBuilder>{
+      //   HOME_SCREEN: (BuildContext context) => HomePage(cameras),
+      //   CAMERA_SCREEN: (BuildContext context) => CardDetailContent(cameras),
+      // },
     );
   }
 }

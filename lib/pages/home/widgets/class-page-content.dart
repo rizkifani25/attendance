@@ -10,8 +10,9 @@ class _ClassPageContentState extends State<ClassPageContent> {
   @override
   Widget build(BuildContext context) {
     return SlidingUpPanel(
-      defaultPanelState: PanelState.OPEN,
-      minHeight: MediaQuery.of(context).size.height / 3.5,
+      defaultPanelState: PanelState.CLOSED,
+      minHeight: MediaQuery.of(context).size.height / 2.2,
+      maxHeight: MediaQuery.of(context).size.height / 1.17,
       margin: EdgeInsets.only(
         left: 1.5,
         right: 1.5,
@@ -23,17 +24,28 @@ class _ClassPageContentState extends State<ClassPageContent> {
       body: Container(
         color: Colors.transparent,
       ),
-      panel: Container(
-        margin: EdgeInsets.only(top: 15),
-        child: Text(
-          "Class",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.grey[700],
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
+      panel: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Divider(
+            thickness: 4.5,
+            color: Colors.grey[400],
+            indent: MediaQuery.of(context).size.width / 2 - 16.5,
+            endIndent: MediaQuery.of(context).size.width / 2 - 16.5,
           ),
-        ),
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Text(
+              "Class",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.indigo[700],
+                fontSize: 16.0,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

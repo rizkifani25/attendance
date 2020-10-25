@@ -1,12 +1,14 @@
 import 'package:attendance/models/cards.dart';
 import 'package:attendance/pages/home/widgets/card-detail-content.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class CardContent extends StatefulWidget {
+  final List<CameraDescription> cameras;
   final DataCards dataCards;
   final int length;
 
-  CardContent(this.dataCards, this.length);
+  CardContent(this.dataCards, this.length, this.cameras);
 
   @override
   _CardContentState createState() => _CardContentState();
@@ -59,6 +61,7 @@ class _CardContentState extends State<CardContent> {
                     widget.dataCards.classId,
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      color: Colors.indigo[700],
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -83,7 +86,7 @@ class _CardContentState extends State<CardContent> {
                                 child: Text(
                                   "Punch In",
                                   style: TextStyle(
-                                    color: Colors.grey[800],
+                                    color: Colors.indigo[800],
                                     fontWeight: FontWeight.w700,
                                     fontSize: 18,
                                   ),
@@ -98,7 +101,7 @@ class _CardContentState extends State<CardContent> {
                                 child: Text(
                                   widget.dataCards.punchIn,
                                   style: TextStyle(
-                                    color: Colors.grey[800],
+                                    color: Colors.indigo[800],
                                     fontSize: 16,
                                   ),
                                 ),
@@ -107,7 +110,7 @@ class _CardContentState extends State<CardContent> {
                           ),
                           VerticalDivider(
                             thickness: 0.7,
-                            color: Colors.blue[900],
+                            color: Colors.indigo[900],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +125,7 @@ class _CardContentState extends State<CardContent> {
                                 child: Text(
                                   "Punch Out",
                                   style: TextStyle(
-                                    color: Colors.grey[800],
+                                    color: Colors.indigo[800],
                                     fontWeight: FontWeight.w700,
                                     fontSize: 18,
                                   ),
@@ -137,7 +140,7 @@ class _CardContentState extends State<CardContent> {
                                 child: Text(
                                   widget.dataCards.punchOut,
                                   style: TextStyle(
-                                    color: Colors.grey[800],
+                                    color: Colors.indigo[800],
                                     fontSize: 16,
                                   ),
                                 ),
@@ -166,9 +169,11 @@ class _CardContentState extends State<CardContent> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) {
-            return CardDetailContent(this.widget.dataCards);
-          }),
+          MaterialPageRoute(
+            builder: (context) {
+              return CardDetailContent(widget.cameras);
+            },
+          ),
         );
       },
     );

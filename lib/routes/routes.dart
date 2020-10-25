@@ -1,0 +1,2 @@
+const String HOME_SCREEN = "/HOME_SCREEN";
+const String CAMERA_SCREEN = "/CAMERA_SCREEN";
