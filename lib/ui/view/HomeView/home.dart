@@ -1,26 +1,24 @@
 import 'dart:ui';
 
-import 'package:attendance/models/pages.dart';
-import 'package:attendance/pages/home/widgets/class-page-content.dart';
-import 'package:attendance/pages/home/widgets/home-page-content.dart';
-import 'package:attendance/pages/home/widgets/profile-page-content.dart';
+import 'package:attendance/ui/view/HomeView/widgets/class-page-content.dart';
+import 'package:attendance/ui/view/HomeView/widgets/home-page-content.dart';
+import 'package:attendance/ui/view/HomeView/widgets/profile-page-content.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
 
-class HomePage extends StatefulWidget {
+class HomeView extends StatefulWidget {
   final List<CameraDescription> cameras;
-  HomePage(this.cameras);
+  HomeView(this.cameras);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeViewState extends State<HomeView> {
   PageController _controller;
-  DataPages dataPages;
   int currentPage = 1;
 
   @override
@@ -29,6 +27,11 @@ class _HomePageState extends State<HomePage> {
     _controller = PageController(
       initialPage: 1,
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

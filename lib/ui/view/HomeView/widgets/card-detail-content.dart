@@ -6,7 +6,6 @@ import 'package:path_provider/path_provider.dart';
 
 class CardDetailContent extends StatefulWidget {
   final List<CameraDescription> cameras;
-  // final DataCards dataCards;
   CardDetailContent(this.cameras);
 
   @override

@@ -1,4 +1,6 @@
+import 'package:attendance/ui/logic/bloc/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ProfilePageContent extends StatefulWidget {
@@ -7,6 +9,20 @@ class ProfilePageContent extends StatefulWidget {
 }
 
 class _ProfilePageContentState extends State<ProfilePageContent> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  _handleLogoutButton() {
+    BlocProvider.of<AuthBloc>(context).add(UserLoggedOut());
+  }
+
   @override
   Widget build(BuildContext context) {
     return SlidingUpPanel(
@@ -35,14 +51,29 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
           ),
           Container(
             margin: EdgeInsets.only(top: 20),
-            child: Text(
-              "Profile",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.indigo[700],
-                fontSize: 16.0,
-                fontWeight: FontWeight.w900,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  "Profile",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.indigo[700],
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthAuthenticated) {
+                      return RaisedButton(
+                        child: Text('LOGOUT'),
+                        onPressed: () => _handleLogoutButton(),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+              ],
             ),
           ),
         ],
