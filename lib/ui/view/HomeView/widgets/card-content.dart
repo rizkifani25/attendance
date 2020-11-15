@@ -1,3 +1,4 @@
+import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/room_detail_response.dart';
 import 'package:attendance/models/time.dart';
 import 'package:attendance/ui/view/HomeView/widgets/card-detail-content.dart';
@@ -36,23 +37,35 @@ class _CardContentState extends State<CardContent> {
   Widget build(BuildContext context) {
     List<Time> _filteredTime = [];
 
-    for (var i = 0; i < _roomDetailResponse.listTime.time1.enrolled.length; i++) {
-      if (_roomDetailResponse.listTime.time1.enrolled[i].studentId == _studentId) {
+    for (var i = 0;
+        i < _roomDetailResponse.listTime.time1.enrolled.length;
+        i++) {
+      if (_roomDetailResponse.listTime.time1.enrolled[i].studentId ==
+          _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time1);
       }
     }
-    for (var i = 0; i < _roomDetailResponse.listTime.time2.enrolled.length; i++) {
-      if (_roomDetailResponse.listTime.time2.enrolled[i].studentId == _studentId) {
+    for (var i = 0;
+        i < _roomDetailResponse.listTime.time2.enrolled.length;
+        i++) {
+      if (_roomDetailResponse.listTime.time2.enrolled[i].studentId ==
+          _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time2);
       }
     }
-    for (var i = 0; i < _roomDetailResponse.listTime.time3.enrolled.length; i++) {
-      if (_roomDetailResponse.listTime.time3.enrolled[i].studentId == _studentId) {
+    for (var i = 0;
+        i < _roomDetailResponse.listTime.time3.enrolled.length;
+        i++) {
+      if (_roomDetailResponse.listTime.time3.enrolled[i].studentId ==
+          _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time3);
       }
     }
-    for (var i = 0; i < _roomDetailResponse.listTime.time4.enrolled.length; i++) {
-      if (_roomDetailResponse.listTime.time4.enrolled[i].studentId == _studentId) {
+    for (var i = 0;
+        i < _roomDetailResponse.listTime.time4.enrolled.length;
+        i++) {
+      if (_roomDetailResponse.listTime.time4.enrolled[i].studentId ==
+          _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time4);
       }
     }
@@ -78,11 +91,14 @@ class _CardContentState extends State<CardContent> {
                       // tapBodyToCollapse: true,
                     ),
                     header: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          _roomDetailResponse.roomName,
-                          style: Theme.of(context).textTheme.body2,
-                        )),
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        _roomDetailResponse.roomName,
+                        style: TextStyle(
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
                     collapsed: Text(
                       'You have ' +
                           _filteredTime.length.toString() +
@@ -128,7 +144,8 @@ class _CardContentState extends State<CardContent> {
                     ),
                     builder: (_, collapsed, expanded) {
                       return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        padding:
+                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
                         child: Expandable(
                           collapsed: collapsed,
                           expanded: expanded,
