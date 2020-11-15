@@ -34,6 +34,17 @@ dependencies:
   path_provider: 
   video_player: 
   flutter_launcher_icons:
+  bloc:
+  equatable:
+  flutter_bloc:
+  syncfusion_flutter_datepicker:
+  fluttertoast:
+  flutter_spinkit:
+  shared_preferences:
+  http:
+  modal_bottom_sheet:
+  badges:
+  expandable:
   # location: ^1.4.1
 
 dev_dependencies:
@@ -68,6 +79,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/icon/calendar.png
     - assets/images/bg-main.jpg
     - assets/images/bg-main2.jpg
     - assets/images/ic_switch_camera_3.png
