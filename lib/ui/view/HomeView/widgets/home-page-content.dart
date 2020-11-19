@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/student.dart';
+import 'package:attendance/ui/view/HomeView/widgets/calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:attendance/models/cards.dart';
 import 'package:attendance/models/pages.dart';
@@ -27,93 +28,39 @@ class _HomePageContentState extends State<HomePageContent> {
   List<DataCards> listDataCard = [];
   bool isPanelClosed = true;
   String _dateNow;
+  String _dateTemp;
+  String _studentId;
 
   @override
   void initState() {
     _dateNow = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
-    DataCards dataCards = new DataCards();
-    DataCards dataCards2 = new DataCards();
-    DataCards dataCards3 = new DataCards();
-    DataCards dataCards4 = new DataCards();
-    DataCards dataCards5 = new DataCards();
-    DataCards dataCards6 = new DataCards();
-
-    dataCards.punchIn = "07:30";
-    dataCards.punchOut = "10:00";
-    dataCards.classId = "B101";
-    dataCards.color = Colors.blue[700];
-    dataCards.lecturer = "Sujono Jono";
-    dataCards.subject = "Programming Concept";
-    dataCards2.punchIn = "11:00";
-    dataCards2.punchOut = "13:30";
-    dataCards2.classId = "B404";
-    dataCards2.color = Colors.blue[700];
-    dataCards2.lecturer = "Mr. XYZ";
-    dataCards2.subject = "Object Oriented Programming";
-    dataCards3.punchIn = "14:00";
-    dataCards3.punchOut = "16:30";
-    dataCards3.classId = "B307";
-    dataCards3.color = Colors.blue[700];
-    dataCards3.lecturer = "Mr. XYZ";
-    dataCards3.subject = "Server Side";
-    dataCards4.punchIn = "17:00";
-    dataCards4.punchOut = "19:30";
-    dataCards4.classId = "B104";
-    dataCards4.color = Colors.blue[700];
-    dataCards4.lecturer = "Mr. XYZ";
-    dataCards4.subject = "Client Side";
-    dataCards5.punchIn = "17:00";
-    dataCards5.punchOut = "19:30";
-    dataCards5.classId = "B103";
-    dataCards5.color = Colors.blue[700];
-    dataCards5.lecturer = "Mr. XYZ";
-    dataCards5.subject = "CGA";
-    dataCards6.punchIn = "20:00";
-    dataCards6.punchOut = "22:30";
-    dataCards6.classId = "B301";
-    dataCards6.color = Colors.blue[700];
-    dataCards6.lecturer = "Mr. XYZ";
-    dataCards6.subject = "3D CGA";
-
-    listDataCard.add(dataCards);
-    listDataCard.add(dataCards2);
-    listDataCard.add(dataCards3);
-    listDataCard.add(dataCards4);
-    listDataCard.add(dataCards5);
-    listDataCard.add(dataCards6);
-
+    _dateTemp = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
     super.initState();
   }
 
-  // alert popup
-  _showAlertDialog(BuildContext context) {
-    // set up the buttons
-    Widget cancelButton = FlatButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
+  _handleUpdateData() {
+    BlocProvider.of<StudentBloc>(context).add(
+      GetRoomHistory(
+        studentId: _studentId,
+        date: _dateTemp,
+      ),
     );
-    Widget continueButton = FlatButton(
-      child: Text("Continue"),
-      onPressed: () {},
-    );
+  }
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
-      content: Text("Would you like to dismiss the " + listDataCard[0].subject + " class?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
-    // show the dialog
+  _showCalendar(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        return SizedBox(
+          child: Calendar(
+            onSelectedDate: (date) {
+              setState(() {
+                _dateTemp = date;
+              });
+              _handleUpdateData();
+            },
+          ),
+        );
       },
     );
   }
@@ -135,23 +82,27 @@ class _HomePageContentState extends State<HomePageContent> {
             topRight: Radius.circular(26.0),
           ),
           body: Container(
-            color: Colors.transparent,
+            color: transparentColor,
           ),
           onPanelClosed: () {
             setState(() {
+              _studentId = state.student.studentId;
               isPanelClosed = true;
             });
+            _handleUpdateData();
           },
           onPanelOpened: () {
-            BlocProvider.of<StudentBloc>(context).add(
-              GetRoomHistory(
-                studentId: state.student.studentId,
-                date: _dateNow,
-              ),
-            );
             setState(() {
+              _studentId = state.student.studentId;
               isPanelClosed = false;
             });
+            _handleUpdateData();
+          },
+          onPanelSlide: (position) {
+            setState(() {
+              _studentId = state.student.studentId;
+            });
+            _handleUpdateData();
           },
           panel: Stack(
             alignment: Alignment.topCenter,
@@ -165,7 +116,9 @@ class _HomePageContentState extends State<HomePageContent> {
               Container(
                 margin: EdgeInsets.only(top: 25),
                 child: Text(
-                  isPanelClosed ? "Welcome!!!" : "Today's Class",
+                  isPanelClosed
+                      ? 'Welcome!!!'
+                      : (_dateNow == _dateTemp ? 'Today\'s' : _dateTemp) + ' Class',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.indigo[700],
@@ -192,26 +145,37 @@ class _HomePageContentState extends State<HomePageContent> {
   Widget _buildIsPanelClosedFalse(BuildContext context, String studentId) {
     return BlocBuilder<StudentBloc, StudentState>(
       builder: (context, state) {
+        print(state);
         if (state is StudentLoadHistory) {
-          print(state.roomHistory.toString());
-          return Container(
-            margin: EdgeInsets.only(top: 50),
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              itemBuilder: (context, index) {
-                return Column(
-                  children: state.roomHistory.map(
-                    (e) {
-                      return CardContent(
-                        cameras: this.widget.cameras,
-                        roomDetailResponse: e,
-                        studentId: studentId,
-                      );
-                    },
-                  ).toList(),
-                );
-              },
-              itemCount: 1,
+          return Scaffold(
+            backgroundColor: transparentColor,
+            floatingActionButton: !isPanelClosed
+                ? FloatingActionButton(
+                    backgroundColor: primaryColor,
+                    child: Icon(Icons.date_range_rounded),
+                    elevation: 5,
+                    onPressed: () => _showCalendar(context),
+                  )
+                : Container(),
+            body: Container(
+              margin: EdgeInsets.only(top: 50),
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: state.roomHistory.map(
+                      (e) {
+                        return CardContent(
+                          cameras: this.widget.cameras,
+                          roomDetailResponse: e,
+                          studentId: studentId,
+                        );
+                      },
+                    ).toList(),
+                  );
+                },
+                itemCount: 1,
+              ),
             ),
           );
         }
@@ -288,77 +252,8 @@ class _HomePageContentState extends State<HomePageContent> {
             ),
           ],
         ),
-        Column(
-          children: [
-            ListTile(
-              leading: CircleAvatar(
-                radius: 25.0,
-                backgroundImage: NetworkImage('https://via.placeholder.com/140x100'),
-              ),
-              title: Text(listDataCard[0].subject),
-              subtitle: Text(
-                listDataCard[0].punchIn + " - " + listDataCard[0].punchOut,
-                style: TextStyle(
-                  color: Colors.black.withOpacity(0.6),
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(left: 15.0),
-              child: Text(
-                "Lecturer : " + listDataCard[0].lecturer,
-                style: TextStyle(
-                  color: Colors.black.withOpacity(0.6),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  child: Container(
-                    margin: EdgeInsets.all(5.0),
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      'Attend',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15.0),
-                      ),
-                      color: Colors.green[700],
-                    ),
-                  ),
-                  onTap: () {
-                    setState(() {});
-                  },
-                ),
-                GestureDetector(
-                  child: Container(
-                    margin: EdgeInsets.all(5.0),
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      'Dismiss',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15.0),
-                      ),
-                      color: Colors.red[800],
-                    ),
-                  ),
-                  onTap: () => _showAlertDialog(context),
-                )
-              ],
-            ),
-          ],
+        SizedBox(
+          height: 120,
         ),
         Container(
           margin: EdgeInsets.all(10),

@@ -9,6 +9,12 @@ final String loginScreen = '/login';
 final String studentScreen = '/student';
 final String roomScreen = '/room';
 
+// position
+final double latitudeBuildingA = -6.284903;
+final double longitudeBuildingA = 107.170568;
+final double latitudeBuildingB = -6.285482;
+final double longitudeBuildingB = 107.170479;
+
 // theme
 final primaryColor = Colors.indigo[700];
 final secondaryColor = Colors.white;

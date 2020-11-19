@@ -1,7 +1,9 @@
 import 'package:attendance/constant/Constant.dart';
+import 'package:attendance/models/enrolled_student.dart';
 import 'package:attendance/models/room_detail_response.dart';
 import 'package:attendance/models/time.dart';
 import 'package:attendance/ui/view/HomeView/widgets/card-detail-content.dart';
+import 'package:badges/badges.dart';
 import 'package:camera/camera.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -36,41 +38,34 @@ class _CardContentState extends State<CardContent> {
   @override
   Widget build(BuildContext context) {
     List<Time> _filteredTime = [];
+    List<Enrolled> _enrolledStudent = [];
 
-    for (var i = 0;
-        i < _roomDetailResponse.listTime.time1.enrolled.length;
-        i++) {
-      if (_roomDetailResponse.listTime.time1.enrolled[i].studentId ==
-          _studentId) {
+    for (var i = 0; i < _roomDetailResponse.listTime.time1.enrolled.length; i++) {
+      if (_roomDetailResponse.listTime.time1.enrolled[i].studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time1);
+        _enrolledStudent.add(_roomDetailResponse.listTime.time1.enrolled[i]);
       }
     }
-    for (var i = 0;
-        i < _roomDetailResponse.listTime.time2.enrolled.length;
-        i++) {
-      if (_roomDetailResponse.listTime.time2.enrolled[i].studentId ==
-          _studentId) {
+    for (var i = 0; i < _roomDetailResponse.listTime.time2.enrolled.length; i++) {
+      if (_roomDetailResponse.listTime.time2.enrolled[i].studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time2);
+        _enrolledStudent.add(_roomDetailResponse.listTime.time2.enrolled[i]);
       }
     }
-    for (var i = 0;
-        i < _roomDetailResponse.listTime.time3.enrolled.length;
-        i++) {
-      if (_roomDetailResponse.listTime.time3.enrolled[i].studentId ==
-          _studentId) {
+    for (var i = 0; i < _roomDetailResponse.listTime.time3.enrolled.length; i++) {
+      if (_roomDetailResponse.listTime.time3.enrolled[i].studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time3);
+        _enrolledStudent.add(_roomDetailResponse.listTime.time3.enrolled[i]);
       }
     }
-    for (var i = 0;
-        i < _roomDetailResponse.listTime.time4.enrolled.length;
-        i++) {
-      if (_roomDetailResponse.listTime.time4.enrolled[i].studentId ==
-          _studentId) {
+    for (var i = 0; i < _roomDetailResponse.listTime.time4.enrolled.length; i++) {
+      if (_roomDetailResponse.listTime.time4.enrolled[i].studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time4);
+        _enrolledStudent.add(_roomDetailResponse.listTime.time4.enrolled[i]);
       }
     }
 
-    print(_filteredTime.length);
+    final List fixedList = Iterable<int>.generate(_filteredTime.length).toList();
 
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -109,7 +104,7 @@ class _CardContentState extends State<CardContent> {
                     ),
                     expanded: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _filteredTime.map(
+                      children: fixedList.map(
                         (e) {
                           return InkWell(
                             child: Card(
@@ -117,12 +112,18 @@ class _CardContentState extends State<CardContent> {
                                 height: 100,
                                 width: MediaQuery.of(context).size.width,
                                 child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      Text(e.time),
-                                      Text(e.lecturer),
-                                      Text(e.subject),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(_filteredTime[e].time),
+                                          Text(_filteredTime[e].lecturer),
+                                          Text(_filteredTime[e].subject),
+                                        ],
+                                      ),
+                                      _statusAttendance(_enrolledStudent[e].status),
                                     ],
                                   ),
                                 ),
@@ -133,7 +134,12 @@ class _CardContentState extends State<CardContent> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return CardDetailContent(widget.cameras);
+                                    return CardDetailContent(
+                                      widget.cameras,
+                                      studentId: _studentId,
+                                      roomId: _roomDetailResponse.roomId,
+                                      time: _filteredTime[e].time,
+                                    );
                                   },
                                 ),
                               );
@@ -144,8 +150,7 @@ class _CardContentState extends State<CardContent> {
                     ),
                     builder: (_, collapsed, expanded) {
                       return Padding(
-                        padding:
-                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                         child: Expandable(
                           collapsed: collapsed,
                           expanded: expanded,
@@ -162,166 +167,26 @@ class _CardContentState extends State<CardContent> {
       ),
     );
   }
-}
 
-// return InkWell(
-//       child: Card(
-//         color: Colors.white,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(24.0),
-//         ),
-//         elevation: 5.5,
-//         margin: EdgeInsets.only(
-//           bottom: 25.0,
-//           left: 5.0,
-//           right: 5.0,
-//         ),
-//         child: ClipPath(
-//           clipper: ShapeBorderClipper(
-//             shape: RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(24.0),
-//             ),
-//           ),
-//           child: Container(
-//             decoration: BoxDecoration(
-//               border: Border(
-//                 top: BorderSide(color: widget.dataCards.color, width: 15),
-//               ),
-//             ),
-//             child: Row(
-//               children: [
-//                 Container(
-//                   alignment: Alignment.center,
-//                   height: 100,
-//                   margin: EdgeInsets.only(
-//                     left: 15,
-//                     top: 10,
-//                     right: 10,
-//                     bottom: 10,
-//                   ),
-//                   width: MediaQuery.of(context).size.width / 4.0,
-//                   decoration: BoxDecoration(
-//                     color: Colors.grey[200],
-//                     borderRadius: BorderRadius.all(Radius.circular(36.0)),
-//                   ),
-//                   child: Text(
-//                     widget.dataCards.classId,
-//                     textAlign: TextAlign.center,
-//                     style: TextStyle(
-//                       color: Colors.indigo[700],
-//                       fontSize: 18,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 ),
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.end,
-//                   children: [
-//                     IntrinsicHeight(
-//                       child: Row(
-//                         children: [
-//                           Column(
-//                             crossAxisAlignment: CrossAxisAlignment.start,
-//                             children: [
-//                               Padding(
-//                                 padding: EdgeInsets.only(
-//                                   left: 10,
-//                                   right: 5,
-//                                   top: 10,
-//                                   bottom: 5,
-//                                 ),
-//                                 child: Text(
-//                                   "Punch In",
-//                                   style: TextStyle(
-//                                     color: Colors.indigo[800],
-//                                     fontWeight: FontWeight.w700,
-//                                     fontSize: 18,
-//                                   ),
-//                                 ),
-//                               ),
-//                               Padding(
-//                                 padding: EdgeInsets.only(
-//                                   left: 10,
-//                                   right: 5,
-//                                   bottom: 10,
-//                                 ),
-//                                 child: Text(
-//                                   widget.dataCards.punchIn,
-//                                   style: TextStyle(
-//                                     color: Colors.indigo[800],
-//                                     fontSize: 16,
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                           VerticalDivider(
-//                             thickness: 0.7,
-//                             color: Colors.indigo[900],
-//                           ),
-//                           Column(
-//                             crossAxisAlignment: CrossAxisAlignment.start,
-//                             children: [
-//                               Padding(
-//                                 padding: EdgeInsets.only(
-//                                   left: 10,
-//                                   right: 5,
-//                                   top: 10,
-//                                   bottom: 5,
-//                                 ),
-//                                 child: Text(
-//                                   "Punch Out",
-//                                   style: TextStyle(
-//                                     color: Colors.indigo[800],
-//                                     fontWeight: FontWeight.w700,
-//                                     fontSize: 18,
-//                                   ),
-//                                 ),
-//                               ),
-//                               Padding(
-//                                 padding: EdgeInsets.only(
-//                                   left: 10,
-//                                   right: 5,
-//                                   bottom: 10,
-//                                 ),
-//                                 child: Text(
-//                                   widget.dataCards.punchOut,
-//                                   style: TextStyle(
-//                                     color: Colors.indigo[800],
-//                                     fontSize: 16,
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                     Container(
-//                       margin: EdgeInsets.only(
-//                         top: 10.0,
-//                       ),
-//                       child: Text(
-//                         widget.dataCards.subject,
-//                         style: TextStyle(),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//       onTap: () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) {
-//               return CardDetailContent(widget.cameras);
-//             },
-//           ),
-//         );
-//       },
-//     );
-//   }
+  Widget _statusAttendance(int status) {
+    return Badge(
+      animationDuration: Duration(milliseconds: 300),
+      animationType: BadgeAnimationType.scale,
+      shape: BadgeShape.square,
+      badgeColor: status == 0
+          ? greenColor
+          : status == 1
+              ? blueColor
+              : redColor,
+      borderRadius: BorderRadius.circular(8),
+      badgeContent: Text(
+        status == 0
+            ? 'valid'
+            : status == 1
+                ? 'not validated'
+                : 'not valid',
+        style: TextStyle(color: secondaryColor),
+      ),
+    );
+  }
+}

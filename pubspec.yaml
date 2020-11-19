@@ -45,8 +45,11 @@ dependencies:
   modal_bottom_sheet:
   badges:
   expandable:
-  # location: ^1.4.1
-
+  date_picker_timeline:
+  geolocator:
+  firebase_storage:
+  firebase_core:
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter
