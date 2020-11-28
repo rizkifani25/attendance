@@ -253,7 +253,7 @@ class _HomePageContentState extends State<HomePageContent> {
           ],
         ),
         SizedBox(
-          height: 120,
+          height: 110,
         ),
         Container(
           margin: EdgeInsets.all(10),

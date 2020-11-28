@@ -33,6 +33,8 @@ class StudentLoadHistory extends StudentState {
   List<Object> get props => [roomHistory];
 }
 
+class StudentLoadHistorySuccess extends StudentState {}
+
 class StudentLoadHistoryFailed extends StudentState {
   final String message;
 

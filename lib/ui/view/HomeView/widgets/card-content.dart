@@ -1,6 +1,7 @@
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/enrolled_student.dart';
 import 'package:attendance/models/room_detail_response.dart';
+import 'package:attendance/models/status_attendance.dart';
 import 'package:attendance/models/time.dart';
 import 'package:attendance/ui/view/HomeView/widgets/card-detail-content.dart';
 import 'package:badges/badges.dart';
@@ -123,7 +124,10 @@ class _CardContentState extends State<CardContent> {
                                           Text(_filteredTime[e].subject),
                                         ],
                                       ),
-                                      _statusAttendance(_enrolledStudent[e].status),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      _statusAttendance(_enrolledStudent[e].statusAttendance),
                                     ],
                                   ),
                                 ),
@@ -168,25 +172,40 @@ class _CardContentState extends State<CardContent> {
     );
   }
 
-  Widget _statusAttendance(int status) {
-    return Badge(
-      animationDuration: Duration(milliseconds: 300),
-      animationType: BadgeAnimationType.scale,
-      shape: BadgeShape.square,
-      badgeColor: status == 0
-          ? greenColor
-          : status == 1
-              ? blueColor
-              : redColor,
-      borderRadius: BorderRadius.circular(8),
-      badgeContent: Text(
-        status == 0
-            ? 'valid'
-            : status == 1
-                ? 'not validated'
-                : 'not valid',
-        style: TextStyle(color: secondaryColor),
+  Widget _statusAttendance(StatusAttendance statusAttendance) {
+    return Expanded(
+      flex: 1,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('ByDistance : ' + statusAttendance.byDistance),
+            Text('ByPhoto : ' + statusAttendance.byPhoto),
+            Text('ByTime : ' + statusAttendance.byTime),
+          ],
+        ),
       ),
     );
   }
 }
+
+// Badge(
+//       animationDuration: Duration(milliseconds: 300),
+//       animationType: BadgeAnimationType.scale,
+//       shape: BadgeShape.square,
+//       badgeColor: status == 0
+//           ? greenColor
+//           : status == 1
+//               ? blueColor
+//               : redColor,
+//       borderRadius: BorderRadius.circular(8),
+//       badgeContent: Text(
+//         status == 0
+//             ? 'valid'
+//             : status == 1
+//                 ? 'not validated'
+//                 : 'not valid',
+//         style: TextStyle(color: secondaryColor),
+//       ),
+//     );

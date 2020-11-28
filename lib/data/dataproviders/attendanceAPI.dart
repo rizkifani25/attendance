@@ -84,11 +84,12 @@ class AttendanceApi {
 
       Reference ref = firebaseStorage
           .ref()
-          .child('attendance/' + _roomId + '/' + _studentId + '/' + _studentId + '-in');
+          .child('attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '.jpg');
       UploadTask uploadTask = ref.putFile(imageFile);
-      uploadTask.then((res) => res.ref.getDownloadURL());
+      uploadTask.then((res) => print('upload success'));
 
-      _attendStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/' + _studentId + '-in';
+      _attendStudent.image =
+          'attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '.jpg';
 
       print('masuk sini');
       AttendStudentRequest attendStudentRequest = new AttendStudentRequest();
@@ -114,7 +115,7 @@ class AttendanceApi {
         throw Exception('Failure');
       }
 
-      return null;
+      return responseBody;
     } catch (e) {
       print(e.toString());
       throw Exception('Failure');
@@ -137,11 +138,12 @@ class AttendanceApi {
 
       Reference ref = firebaseStorage
           .ref()
-          .child('attendance/' + _roomId + '/' + _studentId + '/' + _studentId + '-out');
+          .child('attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '.jpg');
       UploadTask uploadTask = ref.putFile(imageFile);
-      uploadTask.then((res) => res.ref.getDownloadURL());
+      uploadTask.then((res) => print('upload success'));
 
-      _outStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/' + _studentId + '-out';
+      _outStudent.image =
+          'attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '.jpg';
 
       print('masuk sini');
       OutStudentRequest outStudentRequest = new OutStudentRequest();
@@ -167,7 +169,7 @@ class AttendanceApi {
         throw Exception('Failure');
       }
 
-      return null;
+      return responseBody;
     } catch (e) {
       print(e.toString());
       throw Exception('Failure');
