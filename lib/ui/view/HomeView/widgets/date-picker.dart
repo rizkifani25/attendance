@@ -1,6 +1,5 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 typedef OnSelectedDate = void Function(String date);
 
