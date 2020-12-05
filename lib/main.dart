@@ -1,10 +1,7 @@
-import 'package:attendance/data/dataproviders/attendanceAPI.dart';
+import 'package:attendance/data/dataproviders/dataproviders.dart';
 import 'package:attendance/data/repositories/repositories.dart';
-import 'package:attendance/ui/logic/bloc/auth/auth_bloc.dart';
-import 'package:attendance/ui/logic/bloc/login/login_bloc.dart';
-import 'package:attendance/ui/logic/bloc/student/student_bloc.dart';
-import 'package:attendance/ui/view/HomeView/home.dart';
-import 'package:attendance/ui/view/LoginView/login_view.dart';
+import 'package:attendance/ui/logic/bloc/bloc.dart';
+import 'package:attendance/ui/view/view.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,34 +16,54 @@ Future<void> main() async {
   } on CameraException catch (e) {
     logError(e.code, e.description);
   }
-  final attendanceRepository = AttendanceRepository(
-    attendanceApi: AttendanceApi(),
-  );
+
   runApp(
-    RepositoryProvider.value(
-      value: attendanceRepository,
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<LecturerRepository>(
+          create: (context) => LecturerRepository(attendanceApi: AttendanceApi()),
+        ),
+        RepositoryProvider<StudentRepository>(
+          create: (context) => StudentRepository(attendanceApi: AttendanceApi()),
+        ),
+      ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(
-              attendanceRepository: attendanceRepository,
-            )..add(
-                AppLoaded(),
+          BlocProvider<PageBloc>(
+            create: (context) => PageBloc()
+              ..add(
+                RenderSelectedPage(pageState: 'loginStudent'),
               ),
           ),
-          BlocProvider<LoginBloc>(
-            create: (context) => LoginBloc(
-              attendanceRepository: attendanceRepository,
-              authBloc: BlocProvider.of<AuthBloc>(context),
+          BlocProvider<AuthLecturerBloc>(
+            create: (context) => AuthLecturerBloc(
+              lecturerRepository: LecturerRepository(attendanceApi: AttendanceApi()),
+            ),
+          ),
+          BlocProvider<LoginLecturerBloc>(
+            create: (context) => LoginLecturerBloc(
+              lecturerRepository: LecturerRepository(attendanceApi: AttendanceApi()),
+              authLecturerBloc: BlocProvider.of<AuthLecturerBloc>(context),
+            ),
+          ),
+          BlocProvider<AuthStudentBloc>(
+            create: (context) => AuthStudentBloc(
+              studentRepository: StudentRepository(attendanceApi: AttendanceApi()),
+            ),
+          ),
+          BlocProvider<LoginStudentBloc>(
+            create: (context) => LoginStudentBloc(
+              studentRepository: StudentRepository(attendanceApi: AttendanceApi()),
+              authStudentBloc: BlocProvider.of<AuthStudentBloc>(context),
             ),
           ),
           BlocProvider<StudentBloc>(
-            create: (context) => StudentBloc(attendanceRepository: attendanceRepository),
+            create: (context) => StudentBloc(
+              studentRepository: StudentRepository(attendanceApi: AttendanceApi()),
+            ),
           ),
         ],
-        child: AttendanceApp(
-            // appRouter: AppRouter(),
-            ),
+        child: AttendanceApp(),
       ),
     ),
   );
@@ -57,7 +74,6 @@ void logError(String code, String description) {
 }
 
 class AttendanceApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -75,23 +91,22 @@ class AttendanceApp extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          child: BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {},
-            child: BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                if (state is AuthAuthenticated) {
-                  return HomeView(cameras);
-                }
-                if (state is AuthNotAuthenticated) {
-                  return LoginView();
-                }
-                return Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                  ),
-                );
-              },
-            ),
+          child: BlocBuilder<PageBloc, PageState>(
+            builder: (context, state) {
+              if (state is LecturerLoginViewState) {
+                BlocProvider.of<AuthLecturerBloc>(context).add(AppLoadedLecturer());
+                return LecturerLoginView();
+              }
+              if (state is StudentLoginViewState) {
+                BlocProvider.of<AuthStudentBloc>(context).add(AppLoadedStudent());
+                return StudentBaseView();
+              }
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              );
+            },
           ),
         ),
       ),

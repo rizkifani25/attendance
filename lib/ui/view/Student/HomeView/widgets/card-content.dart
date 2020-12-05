@@ -1,9 +1,9 @@
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/enrolled_student.dart';
-import 'package:attendance/models/room_detail_response.dart';
+import 'package:attendance/models/response/room_detail_response.dart';
 import 'package:attendance/models/status_attendance.dart';
 import 'package:attendance/models/time.dart';
-import 'package:attendance/ui/view/HomeView/widgets/card-detail-content.dart';
+import 'package:attendance/ui/view/Student/HomeView/widgets/card-detail-content.dart';
 import 'package:camera/camera.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -40,45 +40,32 @@ class _CardContentState extends State<CardContent> {
     List<Time> _filteredTime = [];
     List<Enrolled> _enrolledStudent = [];
 
-    for (var i = 0;
-        i < _roomDetailResponse.listTime.time1.enrolled.length;
-        i++) {
-      if (_roomDetailResponse.listTime.time1.enrolled[i].studentId ==
-          _studentId) {
+    for (var i = 0; i < _roomDetailResponse.listTime.time1.enrolled.length; i++) {
+      if (_roomDetailResponse.listTime.time1.enrolled[i].studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time1);
         _enrolledStudent.add(_roomDetailResponse.listTime.time1.enrolled[i]);
       }
     }
-    for (var i = 0;
-        i < _roomDetailResponse.listTime.time2.enrolled.length;
-        i++) {
-      if (_roomDetailResponse.listTime.time2.enrolled[i].studentId ==
-          _studentId) {
+    for (var i = 0; i < _roomDetailResponse.listTime.time2.enrolled.length; i++) {
+      if (_roomDetailResponse.listTime.time2.enrolled[i].studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time2);
         _enrolledStudent.add(_roomDetailResponse.listTime.time2.enrolled[i]);
       }
     }
-    for (var i = 0;
-        i < _roomDetailResponse.listTime.time3.enrolled.length;
-        i++) {
-      if (_roomDetailResponse.listTime.time3.enrolled[i].studentId ==
-          _studentId) {
+    for (var i = 0; i < _roomDetailResponse.listTime.time3.enrolled.length; i++) {
+      if (_roomDetailResponse.listTime.time3.enrolled[i].studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time3);
         _enrolledStudent.add(_roomDetailResponse.listTime.time3.enrolled[i]);
       }
     }
-    for (var i = 0;
-        i < _roomDetailResponse.listTime.time4.enrolled.length;
-        i++) {
-      if (_roomDetailResponse.listTime.time4.enrolled[i].studentId ==
-          _studentId) {
+    for (var i = 0; i < _roomDetailResponse.listTime.time4.enrolled.length; i++) {
+      if (_roomDetailResponse.listTime.time4.enrolled[i].studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time4);
         _enrolledStudent.add(_roomDetailResponse.listTime.time4.enrolled[i]);
       }
     }
 
-    final List fixedList =
-        Iterable<int>.generate(_filteredTime.length).toList();
+    final List fixedList = Iterable<int>.generate(_filteredTime.length).toList();
 
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -108,9 +95,7 @@ class _CardContentState extends State<CardContent> {
                       ),
                     ),
                     collapsed: Text(
-                      'You have ' +
-                          _filteredTime.length.toString() +
-                          (_filteredTime.length > 1 ? ' classes' : ' class'),
+                      'You have ' + _filteredTime.length.toString() + (_filteredTime.length > 1 ? ' classes' : ' class'),
                       softWrap: true,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -126,12 +111,10 @@ class _CardContentState extends State<CardContent> {
                                 width: MediaQuery.of(context).size.width,
                                 child: Center(
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(_filteredTime[e].time),
                                           Text(_filteredTime[e].lecturer),
@@ -141,8 +124,7 @@ class _CardContentState extends State<CardContent> {
                                       SizedBox(
                                         width: 20,
                                       ),
-                                      _statusAttendance(
-                                          _enrolledStudent[e].statusAttendance),
+                                      _statusAttendance(_enrolledStudent[e].statusAttendance),
                                     ],
                                   ),
                                 ),
@@ -169,8 +151,7 @@ class _CardContentState extends State<CardContent> {
                     ),
                     builder: (_, collapsed, expanded) {
                       return Padding(
-                        padding:
-                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                         child: Expandable(
                           collapsed: collapsed,
                           expanded: expanded,

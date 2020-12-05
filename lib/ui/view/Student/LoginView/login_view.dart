@@ -1,9 +1,10 @@
 import 'package:attendance/constant/Constant.dart';
-import 'package:attendance/ui/logic/bloc/login/login_bloc.dart';
+import 'package:attendance/ui/logic/bloc/bloc.dart';
+import 'package:attendance/ui/logic/bloc/login/student/login_student_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginView extends StatelessWidget {
+class StudentLoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +41,7 @@ class __SignInFormState extends State<_SignInForm> {
     if (_key.currentState.validate()) {
       if (_studentIdController == null || _passwordController == null) {
       } else {
-        BlocProvider.of<LoginBloc>(context).add(
+        BlocProvider.of<LoginStudentBloc>(context).add(
           LoginStudentWithStudentId(
             studentId: _studentIdController.text,
             password: _passwordController.text,
@@ -69,17 +70,21 @@ class __SignInFormState extends State<_SignInForm> {
     );
   }
 
+  _handleLoginAsLecturerButton() {
+    BlocProvider.of<PageBloc>(context).add(RenderSelectedPage(pageState: 'loginLecturer'));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
+    return BlocListener<LoginStudentBloc, LoginStudentState>(
       listener: (context, state) {
-        if (state is LoginFailure) {
-          _showErrorSnackBar('Login failed', redColor);
+        if (state is LoginStudentFailure) {
+          _showErrorSnackBar(state.message, redColor);
         }
       },
-      child: BlocBuilder<LoginBloc, LoginState>(
+      child: BlocBuilder<LoginStudentBloc, LoginStudentState>(
         builder: (context, state) {
-          if (state is LoginLoading) {
+          if (state is LoginStudentLoading) {
             return Center(
               child: Container(
                 child: CircularProgressIndicator(
@@ -95,13 +100,12 @@ class __SignInFormState extends State<_SignInForm> {
               borderRadius: BorderRadius.circular(24.0),
             ),
             child: Container(
-              height: 350,
+              height: 400,
               width: 300,
               padding: EdgeInsets.all(20),
               child: Form(
                 key: _key,
-                autovalidateMode:
-                    _autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
+                autovalidateMode: _autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -172,10 +176,26 @@ class __SignInFormState extends State<_SignInForm> {
                         color: primaryColor,
                         textColor: textColor,
                         padding: const EdgeInsets.all(16),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(8.0)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
                         child: Text('LOG IN'),
                         onPressed: () => _handleLoginButton(),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: InkWell(
+                          child: Text(
+                            'Login as a Lecturer',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: blueColor,
+                            ),
+                          ),
+                          onTap: () {
+                            _handleLoginAsLecturerButton();
+                          },
+                        ),
                       )
                     ],
                   ),

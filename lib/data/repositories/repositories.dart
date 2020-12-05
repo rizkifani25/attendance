@@ -1,1 +1,2 @@
-export 'attendanceRepository.dart';
+export 'lecturerRepository.dart';
+export 'studentRepository.dart';

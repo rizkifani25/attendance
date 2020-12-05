@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/student.dart';
-import 'package:attendance/ui/view/HomeView/widgets/calendar.dart';
+import 'package:attendance/ui/logic/bloc/auth/student/auth_student_bloc.dart';
+import 'package:attendance/ui/view/Student/HomeView/widgets/calendar.dart';
+import 'package:attendance/ui/view/Student/HomeView/widgets/card-content.dart';
 import 'package:intl/intl.dart';
 import 'package:attendance/models/cards.dart';
 import 'package:attendance/models/pages.dart';
-import 'package:attendance/ui/logic/bloc/auth/auth_bloc.dart';
 import 'package:attendance/ui/logic/bloc/student/student_bloc.dart';
-import 'package:attendance/ui/view/HomeView/widgets/card-content.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,8 +67,8 @@ class _HomePageContentState extends State<HomePageContent> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-      if (state is AuthAuthenticated) {
+    return BlocBuilder<AuthStudentBloc, AuthStudentState>(builder: (context, state) {
+      if (state is AuthStudentAuthenticated) {
         return SlidingUpPanel(
           defaultPanelState: PanelState.CLOSED,
           minHeight: MediaQuery.of(context).size.height / 2.2,
@@ -116,9 +116,7 @@ class _HomePageContentState extends State<HomePageContent> {
               Container(
                 margin: EdgeInsets.only(top: 25),
                 child: Text(
-                  isPanelClosed
-                      ? 'Welcome!!!'
-                      : (_dateNow == _dateTemp ? 'Today\'s' : _dateTemp) + ' Class',
+                  isPanelClosed ? 'Welcome!!!' : (_dateNow == _dateTemp ? 'Today\'s' : _dateTemp) + ' Class',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.indigo[700],
@@ -127,9 +125,7 @@ class _HomePageContentState extends State<HomePageContent> {
                   ),
                 ),
               ),
-              isPanelClosed
-                  ? _buildIsPanelClosedTrue(context, state.student)
-                  : _buildIsPanelClosedFalse(context, state.student.studentId),
+              isPanelClosed ? _buildIsPanelClosedTrue(context, state.student) : _buildIsPanelClosedFalse(context, state.student.studentId),
             ],
           ),
         );

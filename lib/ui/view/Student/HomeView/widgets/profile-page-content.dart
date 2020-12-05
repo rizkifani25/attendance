@@ -1,4 +1,4 @@
-import 'package:attendance/ui/logic/bloc/auth/auth_bloc.dart';
+import 'package:attendance/ui/logic/bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -19,8 +19,8 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
     super.dispose();
   }
 
-  _handleLogoutButton() {
-    BlocProvider.of<AuthBloc>(context).add(UserLoggedOut());
+  _handleSignOutButtonStudent() {
+    BlocProvider.of<AuthStudentBloc>(context).add(StudentLoggedOut());
   }
 
   @override
@@ -62,12 +62,12 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                BlocBuilder<AuthBloc, AuthState>(
+                BlocBuilder<AuthStudentBloc, AuthStudentState>(
                   builder: (context, state) {
-                    if (state is AuthAuthenticated) {
+                    if (state is AuthStudentAuthenticated) {
                       return RaisedButton(
                         child: Text('LOGOUT'),
-                        onPressed: () => _handleLogoutButton(),
+                        onPressed: () => _handleSignOutButtonStudent(),
                       );
                     }
                     return Container();

@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:attendance/ui/view/HomeView/widgets/class-page-content.dart';
-import 'package:attendance/ui/view/HomeView/widgets/home-page-content.dart';
-import 'package:attendance/ui/view/HomeView/widgets/profile-page-content.dart';
+import 'package:attendance/ui/view/Student/HomeView/widgets/class-page-content.dart';
+import 'package:attendance/ui/view/Student/HomeView/widgets/home-page-content.dart';
+import 'package:attendance/ui/view/Student/HomeView/widgets/profile-page-content.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
 
 class HomeView extends StatefulWidget {
   final List<CameraDescription> cameras;
-  HomeView(this.cameras);
+  HomeView({this.cameras});
 
   @override
   _HomeViewState createState() => _HomeViewState();

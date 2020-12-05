@@ -1,13 +1,13 @@
-part of 'login_bloc.dart';
+part of 'login_student_bloc.dart';
 
-abstract class LoginEvent extends Equatable {
-  const LoginEvent();
+abstract class LoginStudentEvent extends Equatable {
+  const LoginStudentEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class LoginStudentWithStudentId extends LoginEvent {
+class LoginStudentWithStudentId extends LoginStudentEvent {
   final String studentId;
   final String password;
 

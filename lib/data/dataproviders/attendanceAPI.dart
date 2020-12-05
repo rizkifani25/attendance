@@ -2,13 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance/constant/Constant.dart';
-import 'package:attendance/models/attend_student.dart';
-import 'package:attendance/models/attend_student_request.dart';
-import 'package:attendance/models/basic_response.dart';
-import 'package:attendance/models/out_student.dart';
-import 'package:attendance/models/out_student_request.dart';
-import 'package:attendance/models/room_detail_response.dart';
-import 'package:attendance/models/student.dart';
+import 'package:attendance/models/models.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
@@ -16,25 +10,88 @@ import 'package:http/http.dart' as http;
 class AttendanceApi {
   AttendanceApi();
 
-  Future<Student> loginStudent(String studentId, String password) async {
+  // Lecturer
+  Future<BasicResponse> loginLecturer(String lecturerEmail, String password) async {
     try {
-      final String loginStudentUrl =
-          apiURL + 'student/login?student_id=' + studentId + '&password=' + password;
-      var response = await http.post(loginStudentUrl);
+      LoginLecturerRequest loginLecturerRequest = new LoginLecturerRequest();
+
+      loginLecturerRequest.lecturerEmail = lecturerEmail;
+      loginLecturerRequest.password = password;
+
+      Map<String, String> requestHeaders = {'Content-type': 'application/json'};
+
+      var response = await http.post(
+        apiURL + 'lecturer/login',
+        body: jsonEncode(loginLecturerRequest.toJson()),
+        headers: requestHeaders,
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failure');
+      }
+
+      BasicResponse basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
+
+      return basicResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception('Failure');
+    }
+  }
+
+  Future<Lecturer> findLecturer(String lecturerEmail) async {
+    try {
+      final String getLecturerInfoUrl = apiURL + 'lecturer/list?lecturer_email=' + lecturerEmail;
+      var response = await http.post(getLecturerInfoUrl);
 
       if (response.statusCode != 200) {
         throw Exception('Failure');
       }
 
       var responseBody = jsonDecode(response.body);
-      if (responseBody['responseCode'] != 200) {
+
+      Lecturer lecturer = Lecturer.fromJson(responseBody['data'][0]);
+
+      return lecturer;
+    } catch (e) {
+      print(e.toString());
+      throw Exception('Failure');
+    }
+  }
+
+  // Student
+  Future<BasicResponse> loginStudent(String studentId, String password) async {
+    try {
+      final String loginStudentUrl = apiURL + 'student/login?student_id=' + studentId + '&password=' + password;
+      var response = await http.post(loginStudentUrl);
+
+      if (response.statusCode != 200) {
         throw Exception('Failure');
       }
-      final String getStudentInfoUrl = apiURL + 'student/list?student_id=' + studentId;
-      var studentInfoResponse = await http.post(getStudentInfoUrl);
-      var studentInfoBody = jsonDecode(studentInfoResponse.body);
 
-      return Student.fromJson(studentInfoBody['data'][0]);
+      BasicResponse basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
+
+      return basicResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception('Failure');
+    }
+  }
+
+  Future<Student> findStudent(String studentId) async {
+    try {
+      final String getStudentInfoUrl = apiURL + 'student/list?student_id=' + studentId;
+      var response = await http.post(getStudentInfoUrl);
+
+      if (response.statusCode != 200) {
+        throw Exception('Failure');
+      }
+
+      var responseBody = jsonDecode(response.body);
+
+      Student student = Student.fromJson(responseBody['data'][0]);
+
+      return student;
     } catch (e) {
       print(e.toString());
       throw Exception('Failure');
@@ -43,8 +100,7 @@ class AttendanceApi {
 
   Future<List<RoomDetailResponse>> getRoomHistory(String studentId, String date) async {
     try {
-      final String roomHistoryUrl =
-          apiURL + 'student/history?student_id=' + studentId + '&date=' + date;
+      final String roomHistoryUrl = apiURL + 'student/history?student_id=' + studentId + '&date=' + date;
       print(roomHistoryUrl);
       var response = await http.post(roomHistoryUrl);
 
@@ -58,8 +114,7 @@ class AttendanceApi {
       }
 
       var responseData = responseBody['data'] as List;
-      List<RoomDetailResponse> _roomHistory =
-          responseData.map((e) => RoomDetailResponse.fromJson(e)).toList();
+      List<RoomDetailResponse> _roomHistory = responseData.map((e) => RoomDetailResponse.fromJson(e)).toList();
 
       return _roomHistory;
     } catch (e) {
@@ -68,12 +123,7 @@ class AttendanceApi {
     }
   }
 
-  Future<BasicResponse> studentDoAttend(
-    AttendStudent _attendStudent,
-    String _roomId,
-    String _studentId,
-    String _time,
-  ) async {
+  Future<BasicResponse> studentDoAttend(AttendStudent _attendStudent, String _roomId, String _studentId, String _time) async {
     try {
       await Firebase.initializeApp();
       final String roomHistoryUrl = apiURL + 'student/attend';
@@ -82,14 +132,11 @@ class AttendanceApi {
 
       File imageFile = new File(_attendStudent.image);
 
-      Reference ref = firebaseStorage
-          .ref()
-          .child('attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '.jpg');
+      Reference ref = firebaseStorage.ref().child('attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '.jpg');
       UploadTask uploadTask = ref.putFile(imageFile);
       uploadTask.then((res) => print('upload success'));
 
-      _attendStudent.image =
-          'attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '.jpg';
+      _attendStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '.jpg';
 
       print('masuk sini');
       AttendStudentRequest attendStudentRequest = new AttendStudentRequest();
@@ -122,12 +169,7 @@ class AttendanceApi {
     }
   }
 
-  Future<BasicResponse> studentDoOut(
-    OutStudent _outStudent,
-    String _roomId,
-    String _studentId,
-    String _time,
-  ) async {
+  Future<BasicResponse> studentDoOut(OutStudent _outStudent, String _roomId, String _studentId, String _time) async {
     try {
       await Firebase.initializeApp();
       final String roomHistoryUrl = apiURL + 'student/attend';
@@ -136,14 +178,11 @@ class AttendanceApi {
 
       File imageFile = new File(_outStudent.image);
 
-      Reference ref = firebaseStorage
-          .ref()
-          .child('attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '.jpg');
+      Reference ref = firebaseStorage.ref().child('attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '.jpg');
       UploadTask uploadTask = ref.putFile(imageFile);
       uploadTask.then((res) => print('upload success'));
 
-      _outStudent.image =
-          'attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '.jpg';
+      _outStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '.jpg';
 
       print('masuk sini');
       OutStudentRequest outStudentRequest = new OutStudentRequest();

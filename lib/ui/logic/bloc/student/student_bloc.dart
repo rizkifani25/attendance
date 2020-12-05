@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:attendance/data/repositories/repositories.dart';
 import 'package:attendance/models/attend_student.dart';
-import 'package:attendance/models/basic_response.dart';
+import 'package:attendance/models/response/basic_response.dart';
 import 'package:attendance/models/out_student.dart';
-import 'package:attendance/models/room_detail_response.dart';
+import 'package:attendance/models/response/room_detail_response.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +13,9 @@ part 'student_event.dart';
 part 'student_state.dart';
 
 class StudentBloc extends Bloc<StudentEvent, StudentState> {
-  final AttendanceRepository attendanceRepository;
+  final StudentRepository studentRepository;
 
-  StudentBloc({this.attendanceRepository}) : super(StudentInitial());
+  StudentBloc({this.studentRepository}) : super(StudentInitial());
 
   @override
   Stream<StudentState> mapEventToState(
@@ -35,8 +35,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   Stream<StudentState> _mapGetRoomHistoryToState(GetRoomHistory event) async* {
     yield StudentLoadingHistory();
     try {
-      final List<RoomDetailResponse> _roomHistory =
-          await attendanceRepository.getRoomHistory(event.studentId, event.date);
+      final List<RoomDetailResponse> _roomHistory = await studentRepository.getRoomHistory(event.studentId, event.date);
 
       if (_roomHistory != null) {
         yield StudentLoadHistory(roomHistory: _roomHistory);
@@ -51,7 +50,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   Stream<StudentState> _mapStudentDoAttendToState(StudentDoAttend event) async* {
     yield StudentFetchLoading();
     try {
-      final BasicResponse basicResponse = await attendanceRepository.studentDoAttend(
+      final BasicResponse basicResponse = await studentRepository.studentDoAttend(
         event.attendStudent,
         event.roomId,
         event.studentId,
@@ -71,7 +70,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   Stream<StudentState> _mapStudentDoOutToState(StudentDoOut event) async* {
     yield StudentFetchLoading();
     try {
-      final BasicResponse basicResponse = await attendanceRepository.studentDoOut(
+      final BasicResponse basicResponse = await studentRepository.studentDoOut(
         event.outStudent,
         event.roomId,
         event.studentId,
