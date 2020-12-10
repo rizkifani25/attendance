@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/student.dart';
-import 'package:attendance/ui/logic/bloc/auth/student/auth_student_bloc.dart';
+import 'package:attendance/ui/logic/bloc/bloc.dart';
 import 'package:attendance/ui/view/Student/HomeView/widgets/calendar.dart';
 import 'package:attendance/ui/view/Student/HomeView/widgets/card-content.dart';
 import 'package:intl/intl.dart';
@@ -67,7 +67,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthStudentBloc, AuthStudentState>(builder: (context, state) {
+    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
       if (state is AuthStudentAuthenticated) {
         return SlidingUpPanel(
           defaultPanelState: PanelState.CLOSED,
@@ -102,7 +102,6 @@ class _HomePageContentState extends State<HomePageContent> {
             setState(() {
               _studentId = state.student.studentId;
             });
-            _handleUpdateData();
           },
           panel: Stack(
             alignment: Alignment.topCenter,

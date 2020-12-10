@@ -1,10 +1,11 @@
+import 'package:attendance/models/models.dart';
 import 'package:flutter/foundation.dart';
 
 class Lecturer {
   String lecturerEmail;
   String lecturerName;
   String password;
-  List historyRoom;
+  List<Room> historyRoom;
 
   Lecturer({this.lecturerEmail, this.lecturerName, this.password, this.historyRoom});
 
@@ -18,7 +19,23 @@ class Lecturer {
   }
 
   factory Lecturer.fromJson(Map<String, dynamic> json) {
-    return Lecturer(lecturerEmail: json['lecturer_email'], lecturerName: json['lecturer_name'], password: json['password'], historyRoom: json['history_room']);
+    if (json['history_room'] != null) {
+      var tagObjsJson = json['history_room'] as List;
+      List<Room> _historyRoom = tagObjsJson.map((e) => Room.fromJson(e)).toList();
+      return Lecturer(
+        lecturerEmail: json['lecturer_email'],
+        lecturerName: json['lecturer_name'],
+        password: json['password'],
+        historyRoom: _historyRoom,
+      );
+    } else {
+      return Lecturer(
+        lecturerEmail: json['lecturer_email'],
+        lecturerName: json['lecturer_name'],
+        password: json['password'],
+        historyRoom: json['history_room'],
+      );
+    }
   }
 
   @override

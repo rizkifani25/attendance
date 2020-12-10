@@ -20,7 +20,7 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
   }
 
   _handleSignOutButtonStudent() {
-    BlocProvider.of<AuthStudentBloc>(context).add(StudentLoggedOut());
+    BlocProvider.of<AuthBloc>(context).add(StudentLoggedOut());
   }
 
   @override
@@ -62,7 +62,7 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                BlocBuilder<AuthStudentBloc, AuthStudentState>(
+                BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     if (state is AuthStudentAuthenticated) {
                       return RaisedButton(

@@ -41,25 +41,25 @@ class _CardContentState extends State<CardContent> {
     List<Enrolled> _enrolledStudent = [];
 
     for (var i = 0; i < _roomDetailResponse.listTime.time1.enrolled.length; i++) {
-      if (_roomDetailResponse.listTime.time1.enrolled[i].studentId == _studentId) {
+      if (_roomDetailResponse.listTime.time1.enrolled[i].student.studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time1);
         _enrolledStudent.add(_roomDetailResponse.listTime.time1.enrolled[i]);
       }
     }
     for (var i = 0; i < _roomDetailResponse.listTime.time2.enrolled.length; i++) {
-      if (_roomDetailResponse.listTime.time2.enrolled[i].studentId == _studentId) {
+      if (_roomDetailResponse.listTime.time2.enrolled[i].student.studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time2);
         _enrolledStudent.add(_roomDetailResponse.listTime.time2.enrolled[i]);
       }
     }
     for (var i = 0; i < _roomDetailResponse.listTime.time3.enrolled.length; i++) {
-      if (_roomDetailResponse.listTime.time3.enrolled[i].studentId == _studentId) {
+      if (_roomDetailResponse.listTime.time3.enrolled[i].student.studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time3);
         _enrolledStudent.add(_roomDetailResponse.listTime.time3.enrolled[i]);
       }
     }
     for (var i = 0; i < _roomDetailResponse.listTime.time4.enrolled.length; i++) {
-      if (_roomDetailResponse.listTime.time4.enrolled[i].studentId == _studentId) {
+      if (_roomDetailResponse.listTime.time4.enrolled[i].student.studentId == _studentId) {
         _filteredTime.add(_roomDetailResponse.listTime.time4);
         _enrolledStudent.add(_roomDetailResponse.listTime.time4.enrolled[i]);
       }
@@ -117,7 +117,7 @@ class _CardContentState extends State<CardContent> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(_filteredTime[e].time),
-                                          Text(_filteredTime[e].lecturer),
+                                          Text(_filteredTime[e].lecturer.lecturerName),
                                           Text(_filteredTime[e].subject),
                                         ],
                                       ),

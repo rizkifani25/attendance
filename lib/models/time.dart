@@ -1,14 +1,18 @@
-import 'package:attendance/models/enrolled_student.dart';
+import 'models.dart';
 
 class Time {
-  bool status;
+  RoomStatus status;
   String time;
+  DateTime punchIn;
+  DateTime punchOut;
   List<Enrolled> enrolled;
-  String lecturer;
+  Lecturer lecturer;
   String subject;
 
   Time({
     this.time,
+    this.punchIn,
+    this.punchOut,
     this.status,
     this.enrolled,
     this.lecturer,
@@ -26,11 +30,13 @@ class Time {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['time'] = this.time;
+    data['time'] = this.time ?? '-';
+    data['punch_in'] = this.punchIn;
+    data['punch_out'] = this.punchOut;
     data['status'] = this.status;
     data['enrolled'] = this.enrolled;
     data['lecturer'] = this.lecturer;
-    data['subject'] = this.subject;
+    data['subject'] = this.subject ?? '-';
     return data;
   }
 
@@ -40,19 +46,23 @@ class Time {
       List<Enrolled> _enrolled = tagObjsJson.map((e) => Enrolled.fromJson(e)).toList();
 
       return Time(
-        time: json['time'],
-        status: json['status'],
+        time: json['time'] ?? '-',
+        punchIn: DateTime.parse(json['punch_in']) ?? '-',
+        punchOut: DateTime.parse(json['punch_out']) ?? '-',
+        status: RoomStatus.fromJson(json['status']),
         enrolled: _enrolled,
-        lecturer: json['lecturer'],
-        subject: json['subject'],
+        lecturer: Lecturer.fromJson(json['lecturer']),
+        subject: json['subject'] ?? '-',
       );
     } else {
       return Time(
-        time: json['time'],
-        status: json['status'],
+        time: json['time'] ?? '-',
+        punchIn: DateTime.parse(json['punch_in']) ?? '-',
+        punchOut: DateTime.parse(json['punch_out']) ?? '-',
+        status: RoomStatus.fromJson(json['status']) ?? false,
         enrolled: json['enrolled'],
-        lecturer: json['lecturer'],
-        subject: json['subject'],
+        lecturer: Lecturer.fromJson(json['lecturer']),
+        subject: json['subject'] ?? '-',
       );
     }
   }

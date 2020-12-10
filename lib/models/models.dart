@@ -1,6 +1,7 @@
 export 'request/attend_student_request.dart';
 export 'request/out_student_request.dart';
 export 'request/login_lecturer_request.dart';
+export 'request/register_room_request.dart';
 
 export 'response/basic_response.dart';
 export 'response/room_detail_response.dart';
@@ -17,3 +18,5 @@ export 'room.dart';
 export 'status_attendance.dart';
 export 'student.dart';
 export 'time.dart';
+export 'room_status.dart';
+export 'permission.dart';

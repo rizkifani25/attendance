@@ -18,6 +18,7 @@ final double longitudeBuildingB = 107.170479;
 // theme
 final primaryColor = Colors.indigo[700];
 final secondaryColor = Colors.white;
+final blackColor = Colors.black;
 final transparentColor = Colors.transparent;
 final textColor = Colors.white70;
 final hoverColor = Colors.indigo;
@@ -30,3 +31,8 @@ final blueColor = Colors.blue[400];
 final redColor = Colors.red[700];
 final redHoverColor = Colors.red[400];
 final greenColor = Colors.green[700];
+final yellowColor = Colors.yellow[900];
+
+// shimer effect
+final baseShimerColor = Colors.grey[300];
+final highLightShimerColor = Colors.grey[100];

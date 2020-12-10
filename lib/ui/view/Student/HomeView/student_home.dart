@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 
 GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
 
-class HomeView extends StatefulWidget {
+class StudentHomeView extends StatefulWidget {
   final List<CameraDescription> cameras;
-  HomeView({this.cameras});
+  StudentHomeView({this.cameras});
 
   @override
-  _HomeViewState createState() => _HomeViewState();
+  _StudentHomeViewState createState() => _StudentHomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _StudentHomeViewState extends State<StudentHomeView> {
   PageController _controller;
   int currentPage = 1;
 

@@ -1,6 +1,10 @@
+import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/data/dataproviders/dataproviders.dart';
 import 'package:attendance/data/repositories/repositories.dart';
 import 'package:attendance/ui/logic/bloc/bloc.dart';
+import 'package:attendance/ui/logic/bloc/login/login_bloc.dart';
+import 'package:attendance/ui/logic/service/service.dart';
+import 'package:attendance/ui/view/Widgets/loading_indicator.dart';
 import 'package:attendance/ui/view/view.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +17,9 @@ Future<void> main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
+
+    SessionManagerService().setLecturer(null);
+    SessionManagerService().setStudent(null);
   } on CameraException catch (e) {
     logError(e.code, e.description);
   }
@@ -26,6 +33,9 @@ Future<void> main() async {
         RepositoryProvider<StudentRepository>(
           create: (context) => StudentRepository(attendanceApi: AttendanceApi()),
         ),
+        RepositoryProvider<RoomRepository>(
+          create: (context) => RoomRepository(attendanceApi: AttendanceApi()),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -35,31 +45,27 @@ Future<void> main() async {
                 RenderSelectedPage(pageState: 'loginStudent'),
               ),
           ),
-          BlocProvider<AuthLecturerBloc>(
-            create: (context) => AuthLecturerBloc(
+          BlocProvider<AuthBloc>(
+            create: (context) => AuthBloc(
               lecturerRepository: LecturerRepository(attendanceApi: AttendanceApi()),
-            ),
-          ),
-          BlocProvider<LoginLecturerBloc>(
-            create: (context) => LoginLecturerBloc(
-              lecturerRepository: LecturerRepository(attendanceApi: AttendanceApi()),
-              authLecturerBloc: BlocProvider.of<AuthLecturerBloc>(context),
-            ),
-          ),
-          BlocProvider<AuthStudentBloc>(
-            create: (context) => AuthStudentBloc(
               studentRepository: StudentRepository(attendanceApi: AttendanceApi()),
             ),
           ),
-          BlocProvider<LoginStudentBloc>(
-            create: (context) => LoginStudentBloc(
+          BlocProvider<LoginBloc>(
+            create: (context) => LoginBloc(
+              lecturerRepository: LecturerRepository(attendanceApi: AttendanceApi()),
+              authBloc: BlocProvider.of<AuthBloc>(context),
               studentRepository: StudentRepository(attendanceApi: AttendanceApi()),
-              authStudentBloc: BlocProvider.of<AuthStudentBloc>(context),
             ),
           ),
           BlocProvider<StudentBloc>(
             create: (context) => StudentBloc(
               studentRepository: StudentRepository(attendanceApi: AttendanceApi()),
+            ),
+          ),
+          BlocProvider<RoomBloc>(
+            create: (context) => RoomBloc(
+              roomRepository: RoomRepository(attendanceApi: AttendanceApi()),
             ),
           ),
         ],
@@ -94,18 +100,12 @@ class AttendanceApp extends StatelessWidget {
           child: BlocBuilder<PageBloc, PageState>(
             builder: (context, state) {
               if (state is LecturerLoginViewState) {
-                BlocProvider.of<AuthLecturerBloc>(context).add(AppLoadedLecturer());
-                return LecturerLoginView();
+                return LecturerBaseView();
               }
               if (state is StudentLoginViewState) {
-                BlocProvider.of<AuthStudentBloc>(context).add(AppLoadedStudent());
                 return StudentBaseView();
               }
-              return Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              );
+              return WidgetLoadingIndicator(color: primaryColor);
             },
           ),
         ),

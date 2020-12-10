@@ -19,15 +19,12 @@ class PageBloc extends Bloc<PageEvent, PageState> {
   }
 
   Stream<PageState> _mapRenderSelectedPageToState(RenderSelectedPage event) async* {
-    switch (event.pageState) {
-      case 'loginLecturer':
-        yield LecturerLoginViewState();
-        break;
-      case 'loginStudent':
-        yield StudentLoginViewState();
-        break;
-      default:
-        yield PageLoading();
+    if (event.pageState == 'loginLecturer') {
+      yield LecturerLoginViewState();
+    } else if (event.pageState == 'loginStudent') {
+      yield StudentLoginViewState();
+    } else {
+      yield PageLoading();
     }
   }
 }

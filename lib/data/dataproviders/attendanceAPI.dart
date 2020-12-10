@@ -15,8 +15,8 @@ class AttendanceApi {
     try {
       LoginLecturerRequest loginLecturerRequest = new LoginLecturerRequest();
 
-      loginLecturerRequest.lecturerEmail = lecturerEmail;
-      loginLecturerRequest.password = password;
+      loginLecturerRequest.lecturerEmail = lecturerEmail ?? '';
+      loginLecturerRequest.password = password ?? '';
 
       Map<String, String> requestHeaders = {'Content-type': 'application/json'};
 
@@ -34,7 +34,6 @@ class AttendanceApi {
 
       return basicResponse;
     } catch (e) {
-      print(e.toString());
       throw Exception('Failure');
     }
   }
@@ -101,7 +100,7 @@ class AttendanceApi {
   Future<List<RoomDetailResponse>> getRoomHistory(String studentId, String date) async {
     try {
       final String roomHistoryUrl = apiURL + 'student/history?student_id=' + studentId + '&date=' + date;
-      print(roomHistoryUrl);
+
       var response = await http.post(roomHistoryUrl);
 
       if (response.statusCode != 200) {
@@ -211,6 +210,68 @@ class AttendanceApi {
       return responseBody;
     } catch (e) {
       print(e.toString());
+      throw Exception('Failure');
+    }
+  }
+
+  // Room
+  Future<BasicResponse> getInfoRoomHistory({String studentId, String lecturerEmail, String date}) async {
+    try {
+      String roomHistoryStudentUrl = apiURL + 'room/history?student_id=' + studentId + '&date=' + date;
+      String roomHistoryLecturerUrl = apiURL + 'room/history?lecturer_email=' + lecturerEmail + '&date=' + date;
+
+      final String finalUrl = studentId == null || studentId == '' ? roomHistoryLecturerUrl : roomHistoryStudentUrl;
+
+      var response = await http.post(finalUrl);
+
+      if (response.statusCode != 200) {
+        throw Exception('Failure');
+      }
+
+      BasicResponse basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
+
+      return basicResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception('Failure');
+    }
+  }
+
+  Future<BasicResponse> updateRoomDetail(String time, String roomName, String date, Time updatedTime) async {
+    try {
+      RegisterRoomRequest registerRoomRequest = new RegisterRoomRequest();
+
+      registerRoomRequest.roomName = roomName;
+      registerRoomRequest.updatedTime = updatedTime;
+      registerRoomRequest.date = date;
+      registerRoomRequest.time = time;
+
+      Map<String, String> requestHeaders = {'Content-type': 'application/json'};
+
+      var response = await http.post(
+        apiURL + 'room/register',
+        body: jsonEncode(registerRoomRequest.toJson()),
+        headers: requestHeaders,
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failure');
+      }
+
+      var responseBody = jsonDecode(response.body);
+      if (responseBody['responseCode'] != 200) {
+        BasicResponse basicResponse = new BasicResponse(
+          responseCode: 400,
+          responseMessage: responseBody['responseMessage'],
+        );
+        return basicResponse;
+      } else {
+        var responseBody = jsonDecode(response.body);
+        BasicResponse basicResponse = BasicResponse.fromJson(responseBody);
+        return basicResponse;
+      }
+    } catch (e) {
+      print(e);
       throw Exception('Failure');
     }
   }
