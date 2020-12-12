@@ -2,7 +2,7 @@ import 'package:attendance/models/models.dart';
 
 class OutStudent {
   String image;
-  String time;
+  DateTime time;
   PositionStudent positionStudent;
   double distance;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // URI
-final String apiURL = 'http://192.168.18.22:3000/';
+final String apiURL = 'https://d82dca9c4389.ngrok.io/';
 
 // endpoint
 final String dashboardScreen = '/dashboard';

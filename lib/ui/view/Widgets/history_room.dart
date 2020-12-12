@@ -3,6 +3,7 @@ import 'package:attendance/models/models.dart';
 import 'package:attendance/ui/view/Student/Widgets/student_expandable_card_room.dart';
 import 'package:attendance/ui/view/Widgets/loading_indicator.dart';
 import 'package:attendance/ui/view/Widgets/notification_snackbar.dart';
+import 'package:camera/camera.dart';
 import 'package:intl/intl.dart';
 import 'package:attendance/ui/logic/bloc/bloc.dart';
 import 'package:attendance/ui/view/Lecturer/Widgets/lecturer_expandable_card_room.dart';
@@ -10,6 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WidgetHistoryRoom extends StatelessWidget {
+  final List<CameraDescription> cameras;
+
+  WidgetHistoryRoom({this.cameras});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
@@ -45,6 +50,7 @@ class WidgetHistoryRoom extends StatelessWidget {
             );
           } else {
             return _RoomDetail(
+              cameras: cameras,
               listRoom: state.student.historyRoom,
               student: state.student,
             );
@@ -57,19 +63,18 @@ class WidgetHistoryRoom extends StatelessWidget {
 }
 
 class _RoomDetail extends StatefulWidget {
+  final List<CameraDescription> cameras;
   final List<Room> listRoom;
   final Lecturer lecturer;
   final Student student;
 
-  _RoomDetail({this.listRoom, this.lecturer, this.student});
+  _RoomDetail({this.cameras, this.listRoom, this.lecturer, this.student});
 
   @override
   __RoomDetailState createState() => __RoomDetailState();
 }
 
 class __RoomDetailState extends State<_RoomDetail> {
-  List<RoomDetailResponse> roomDetail;
-
   @override
   void initState() {
     if (widget.lecturer != null) {
@@ -121,7 +126,7 @@ class __RoomDetailState extends State<_RoomDetail> {
                       return WidgetLecturerExpandableCardRoom(roomDetail: e, lecturer: widget.lecturer);
                     }
                     if (widget.student != null) {
-                      return WidgetStudentExpandableCardRoom(roomDetail: e, student: widget.student);
+                      return WidgetStudentExpandableCardRoom(cameras: widget.cameras, roomDetail: e, student: widget.student);
                     }
                   },
                 ).toList(),

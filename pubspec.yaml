@@ -50,6 +50,7 @@ dependencies:
   firebase_storage:
   firebase_core:
   shimmer:
+  pull_to_refresh:
     
 dev_dependencies:
   flutter_test:

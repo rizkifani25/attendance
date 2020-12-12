@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:attendance/models/models.dart';
 import 'package:intl/intl.dart';
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/attend_student.dart';
@@ -12,19 +13,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class CardDetailContent extends StatefulWidget {
+class StudentAttendPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-  final String studentId;
+  final Student student;
   final String roomId;
   final String time;
 
-  CardDetailContent(this.cameras, {this.studentId, this.roomId, this.time});
+  StudentAttendPage({this.cameras, this.student, this.roomId, this.time});
 
   @override
-  _CardDetailContentState createState() => _CardDetailContentState();
+  _StudentAttendPageState createState() => _StudentAttendPageState();
 }
 
-class _CardDetailContentState extends State<CardDetailContent> with WidgetsBindingObserver {
+class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindingObserver {
   String imagePath;
   bool _toggleCamera = false;
   CameraController controller;
@@ -165,13 +166,13 @@ class _CardDetailContentState extends State<CardDetailContent> with WidgetsBindi
       _positionStudent.longitude = position.longitude;
 
       _attendStudent.positionStudent = _positionStudent;
-      _attendStudent.time = new DateFormat('hh.mm').format(DateTime.now()).toString();
+      _attendStudent.time = DateTime.now();
 
       BlocProvider.of<StudentBloc>(context).add(
         StudentDoAttend(
           attendStudent: _attendStudent,
           roomId: widget.roomId,
-          studentId: widget.studentId,
+          studentId: widget.student.studentId,
           time: widget.time,
         ),
       );
@@ -190,13 +191,13 @@ class _CardDetailContentState extends State<CardDetailContent> with WidgetsBindi
       _positionStudent.longitude = position.longitude;
 
       _outStudent.positionStudent = _positionStudent;
-      _outStudent.time = new DateFormat('hh.mm').format(DateTime.now()).toString();
+      _outStudent.time = DateTime.now();
 
       BlocProvider.of<StudentBloc>(context).add(
         StudentDoOut(
           outStudent: _outStudent,
           roomId: widget.roomId,
-          studentId: widget.studentId,
+          studentId: widget.student.studentId,
           time: widget.time,
         ),
       );
@@ -335,10 +336,7 @@ class _CardDetailContentState extends State<CardDetailContent> with WidgetsBindi
                                   ),
                                   Container(
                                     child: Text(
-                                      'Location :: ' +
-                                          position.latitude.toString() +
-                                          ', ' +
-                                          position.longitude.toString(),
+                                      'Location :: ' + position.latitude.toString() + ', ' + position.longitude.toString(),
                                       style: TextStyle(fontSize: 20, color: textColor),
                                     ),
                                   ),
@@ -347,7 +345,7 @@ class _CardDetailContentState extends State<CardDetailContent> with WidgetsBindi
                                     style: TextStyle(fontSize: 20, color: textColor),
                                   ),
                                   Text(
-                                    widget.studentId == null ? '' : widget.studentId,
+                                    widget.student.studentId == null ? '' : widget.student.studentId,
                                     style: TextStyle(fontSize: 20, color: textColor),
                                   ),
                                   Text(

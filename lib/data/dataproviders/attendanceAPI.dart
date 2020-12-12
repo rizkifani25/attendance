@@ -62,8 +62,8 @@ class AttendanceApi {
   Future<BasicResponse> loginStudent(String studentId, String password) async {
     try {
       final String loginStudentUrl = apiURL + 'student/login?student_id=' + studentId + '&password=' + password;
-      var response = await http.post(loginStudentUrl);
 
+      var response = await http.post(loginStudentUrl);
       if (response.statusCode != 200) {
         throw Exception('Failure');
       }

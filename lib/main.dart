@@ -103,7 +103,7 @@ class AttendanceApp extends StatelessWidget {
                 return LecturerBaseView();
               }
               if (state is StudentLoginViewState) {
-                return StudentBaseView();
+                return StudentBaseView(cameras: cameras);
               }
               return WidgetLoadingIndicator(color: primaryColor);
             },

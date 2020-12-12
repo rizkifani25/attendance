@@ -3,7 +3,7 @@ import 'package:attendance/models/enrolled_student.dart';
 import 'package:attendance/models/response/room_detail_response.dart';
 import 'package:attendance/models/status_attendance.dart';
 import 'package:attendance/models/time.dart';
-import 'package:attendance/ui/view/Student/HomeView/widgets/card-detail-content.dart';
+import 'package:attendance/ui/view/Student/Widgets/student_attend_page.dart';
 import 'package:camera/camera.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -135,9 +135,7 @@ class _CardContentState extends State<CardContent> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return CardDetailContent(
-                                      widget.cameras,
-                                      studentId: _studentId,
+                                    return StudentAttendPage(
                                       roomId: _roomDetailResponse.roomId,
                                       time: _filteredTime[e].time,
                                     );

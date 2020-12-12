@@ -1,48 +1,18 @@
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/models.dart';
-import 'package:attendance/ui/logic/bloc/bloc.dart';
+import 'package:attendance/ui/view/Student/Widgets/student_attend_page.dart';
 import 'package:attendance/ui/view/Widgets/font.dart';
 import 'package:attendance/ui/view/Widgets/notification_snackbar.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class WidgetStudentCardDetailClass extends StatelessWidget {
+  final List<CameraDescription> cameras;
   final RoomDetailResponse roomDetail;
   final Time time;
+  final Student student;
 
-  WidgetStudentCardDetailClass({this.roomDetail, this.time});
-
-  _handleUpdateData({BuildContext context, String statusMessage}) {
-    Time updatedTime = new Time(
-      time: time.time,
-      status: new RoomStatus(status: true, statusMessage: statusMessage),
-      enrolled: time.enrolled,
-      lecturer: time.lecturer,
-      subject: time.subject,
-    );
-    BlocProvider.of<RoomBloc>(context).add(
-      UpdateRoomData(
-        date: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
-        time: time.time == '07.30 - 09.30'
-            ? 'time1'
-            : time.time == '10.00 - 12.00'
-                ? 'time2'
-                : time.time == '12.30 - 14.30'
-                    ? 'time3'
-                    : 'time4',
-        roomName: roomDetail.roomName,
-        updatedTime: updatedTime,
-      ),
-    );
-    BlocProvider.of<RoomBloc>(context).add(
-      GetInfoRoomHistory(
-        studentId: '',
-        lecturerEmail: time.lecturer.lecturerEmail,
-        date: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
-      ),
-    );
-  }
+  WidgetStudentCardDetailClass({this.cameras, this.roomDetail, this.time, this.student});
 
   @override
   Widget build(BuildContext context) {
@@ -93,14 +63,26 @@ class WidgetStudentCardDetailClass extends StatelessWidget {
                             }
                           : () {
                               DateTime dateNow = DateTime.now();
-                              if ((dateNow.isBefore(time.punchIn) || dateNow.isAfter(time.punchOut)) && time.status.statusMessage == 'Booked') {
+                              if ((dateNow.isBefore(time.punchIn) || dateNow.isAfter(time.punchOut))) {
                                 WidgetNotificationSnackbar().render(
                                   context: context,
                                   color: redColor,
                                   message: 'You can only attend at the scheduled time',
                                 );
-                              } else if (dateNow.isAfter(time.punchIn) && dateNow.isBefore(time.punchOut) && time.status.statusMessage == 'Booked') {
-                                print('attended');
+                              } else if (dateNow.isAfter(time.punchIn) && dateNow.isBefore(time.punchOut)) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return StudentAttendPage(
+                                        cameras: cameras,
+                                        student: student,
+                                        roomId: roomDetail.roomId,
+                                        time: time.time,
+                                      );
+                                    },
+                                  ),
+                                );
                               } else {
                                 WidgetNotificationSnackbar().render(
                                   context: context,
