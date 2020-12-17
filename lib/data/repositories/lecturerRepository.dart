@@ -13,10 +13,9 @@ class LecturerRepository {
     return basicResponse;
   }
 
-  Future<Lecturer> getLecturerLoginInfo() async {
-    String lecturerEmail = await SessionManagerService().getLecturer();
-    Lecturer lecturer = lecturerEmail != '' ? await attendanceApi.findLecturer(lecturerEmail) : null;
-    return lecturer;
+  Future<BasicResponse> getLecturerLoginInfo(String lecturerEmail) async {
+    BasicResponse basicResponse = await attendanceApi.findLecturer(lecturerEmail);
+    return basicResponse;
   }
 
   Future<Lecturer> signOutLecturer() async {

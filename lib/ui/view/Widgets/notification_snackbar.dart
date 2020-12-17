@@ -10,12 +10,13 @@ class WidgetNotificationSnackbar {
   render({BuildContext context, Color color, String message}) {
     return Scaffold.of(context).showSnackBar(
       SnackBar(
-        duration: Duration(milliseconds: 750),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(15),
+        duration: Duration(milliseconds: 1200),
         backgroundColor: color ?? greenColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(5),
-            topRight: Radius.circular(5),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
           ),
         ),
         content: Text(message ?? ''),

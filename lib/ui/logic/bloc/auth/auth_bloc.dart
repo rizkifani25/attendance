@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:attendance/data/repositories/repositories.dart';
 import 'package:attendance/models/models.dart';
+import 'package:attendance/ui/logic/service/service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -50,14 +51,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _mapAppLoadedLecturerToState(AppLoadedLecturer event) async* {
     yield AuthLoading();
     try {
-      final Lecturer currentLecturer = await lecturerRepository.getLecturerLoginInfo();
+      String lecturerEmail = await SessionManagerService().getLecturer();
+      BasicResponse basicResponse = await lecturerRepository.getLecturerLoginInfo(lecturerEmail);
+
+      var rawObject = basicResponse.data as List;
+      List<Lecturer> listLecturer = rawObject.map((e) => Lecturer.fromJson(e)).toList();
+      Lecturer currentLecturer = lecturerEmail != '' ? listLecturer.first : null;
+
+      print('===== TESTING =====');
+      print(lecturerEmail);
+      print(currentLecturer.lecturerEmail);
+      print('===== TESTING =====');
+
       if (currentLecturer != null) {
         yield AuthLecturerAuthenticated(lecturer: currentLecturer);
       } else {
         yield AuthLecturerNotAuthenticated();
       }
     } catch (e) {
-      yield AuthFailure(message: e ?? 'An unknown error occurred when auth');
+      print(e);
+      yield AuthFailure(message: 'An unknown error occurred when auth');
     }
   }
 

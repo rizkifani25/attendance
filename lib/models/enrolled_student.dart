@@ -29,21 +29,4 @@ class Enrolled {
       permission: Permission.fromJson(json['permission']),
     );
   }
-
-  @override
-  String toString() {
-    return 'Enrolled(student: $student, statusAttendance: $statusAttendance, attendStudent: $attendStudent, outStudent: $outStudent, permission: $permission)';
-  }
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is Enrolled && o.student == student && o.statusAttendance == statusAttendance && o.attendStudent == attendStudent && o.outStudent == outStudent && o.permission == permission;
-  }
-
-  @override
-  int get hashCode {
-    return student.hashCode ^ statusAttendance.hashCode ^ attendStudent.hashCode ^ outStudent.hashCode ^ permission.hashCode;
-  }
 }

@@ -34,8 +34,8 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         yield RoomFetchingFailure(message: _findRoomResult.responseMessage);
       } else {
         var tagObjsJson = _findRoomResult.data as List;
-        List<RoomDetailResponse> roomDetailResponse = tagObjsJson.map((e) => RoomDetailResponse.fromJson(e)).toList();
-        yield GetRoomHistorySuccess(roomDetailResponse: roomDetailResponse);
+        List<RoomDetail> roomDetail = tagObjsJson.map((e) => RoomDetail.fromJson(e)).toList();
+        yield GetRoomHistorySuccess(roomDetail: roomDetail);
       }
     } catch (e) {
       print(e.toString());

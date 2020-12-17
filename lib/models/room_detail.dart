@@ -1,12 +1,12 @@
-import 'package:attendance/models/list_time.dart';
+import 'package:attendance/models/models.dart';
 
-class RoomDetailResponse {
+class RoomDetail {
   String roomId;
   String roomName;
   String date;
   ListTime listTime;
 
-  RoomDetailResponse({this.roomId, this.roomName, this.date, this.listTime});
+  RoomDetail({this.roomId, this.roomName, this.date, this.listTime});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
@@ -17,8 +17,8 @@ class RoomDetailResponse {
     return data;
   }
 
-  factory RoomDetailResponse.fromJson(Map<String, dynamic> json) {
-    return RoomDetailResponse(
+  factory RoomDetail.fromJson(Map<String, dynamic> json) {
+    return RoomDetail(
       roomId: json['room_id'],
       roomName: json['room_name'],
       date: json['date'],

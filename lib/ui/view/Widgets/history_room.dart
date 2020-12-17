@@ -64,7 +64,7 @@ class WidgetHistoryRoom extends StatelessWidget {
 
 class _RoomDetail extends StatefulWidget {
   final List<CameraDescription> cameras;
-  final List<Room> listRoom;
+  final List<RoomHistory> listRoom;
   final Lecturer lecturer;
   final Student student;
 
@@ -105,7 +105,7 @@ class __RoomDetailState extends State<_RoomDetail> {
       child: BlocBuilder<RoomBloc, RoomState>(
         builder: (context, state) {
           if (state is GetRoomHistorySuccess) {
-            if (state.roomDetailResponse.isEmpty) {
+            if (state.roomDetail.isEmpty) {
               return Container(
                 margin: EdgeInsets.all(20),
                 child: Center(
@@ -120,7 +120,7 @@ class __RoomDetailState extends State<_RoomDetail> {
               );
             } else {
               return Column(
-                children: state.roomDetailResponse.map(
+                children: state.roomDetail.map(
                   (e) {
                     if (widget.lecturer != null) {
                       return WidgetLecturerExpandableCardRoom(roomDetail: e, lecturer: widget.lecturer);

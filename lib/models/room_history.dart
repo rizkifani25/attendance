@@ -1,7 +1,7 @@
-class Room {
+class RoomHistory {
   String roomId;
 
-  Room({this.roomId});
+  RoomHistory({this.roomId});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
@@ -9,8 +9,8 @@ class Room {
     return data;
   }
 
-  factory Room.fromJson(Map<String, dynamic> json) {
-    return Room(
+  factory RoomHistory.fromJson(Map<String, dynamic> json) {
+    return RoomHistory(
       roomId: json['room_id'],
     );
   }

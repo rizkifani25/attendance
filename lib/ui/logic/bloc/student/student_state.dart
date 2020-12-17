@@ -25,7 +25,7 @@ class StudentFetchFailed extends StudentState {
 }
 
 class StudentLoadHistory extends StudentState {
-  final List<RoomDetailResponse> roomHistory;
+  final List<RoomDetail> roomHistory;
 
   StudentLoadHistory({this.roomHistory});
 

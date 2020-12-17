@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WidgetLecturerExpandableCardRoom extends StatelessWidget {
-  final RoomDetailResponse roomDetail;
+  final RoomDetail roomDetail;
   final Lecturer lecturer;
 
   WidgetLecturerExpandableCardRoom({this.roomDetail, this.lecturer});

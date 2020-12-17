@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class WidgetStudentExpandableCardRoom extends StatelessWidget {
   final List<CameraDescription> cameras;
-  final RoomDetailResponse roomDetail;
+  final RoomDetail roomDetail;
   final Student student;
 
   WidgetStudentExpandableCardRoom({this.cameras, this.roomDetail, this.student});

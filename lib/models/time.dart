@@ -9,15 +9,7 @@ class Time {
   Lecturer lecturer;
   String subject;
 
-  Time({
-    this.time,
-    this.punchIn,
-    this.punchOut,
-    this.status,
-    this.enrolled,
-    this.lecturer,
-    this.subject,
-  });
+  Time({this.time, this.punchIn, this.punchOut, this.status, this.enrolled, this.lecturer, this.subject});
 
   static List<String> getRoomTime() {
     return [
@@ -30,13 +22,13 @@ class Time {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['time'] = this.time ?? '-';
+    data['time'] = this.time;
     data['punch_in'] = this.punchIn;
     data['punch_out'] = this.punchOut;
     data['status'] = this.status;
     data['enrolled'] = this.enrolled;
     data['lecturer'] = this.lecturer;
-    data['subject'] = this.subject ?? '-';
+    data['subject'] = this.subject;
     return data;
   }
 
@@ -46,23 +38,23 @@ class Time {
       List<Enrolled> _enrolled = tagObjsJson.map((e) => Enrolled.fromJson(e)).toList();
 
       return Time(
-        time: json['time'] ?? '-',
-        punchIn: DateTime.parse(json['punch_in']) ?? '-',
-        punchOut: DateTime.parse(json['punch_out']) ?? '-',
+        time: json['time'],
+        punchIn: DateTime.parse(json['punch_in']),
+        punchOut: DateTime.parse(json['punch_out']),
         status: RoomStatus.fromJson(json['status']),
         enrolled: _enrolled,
         lecturer: Lecturer.fromJson(json['lecturer']),
-        subject: json['subject'] ?? '-',
+        subject: json['subject'],
       );
     } else {
       return Time(
-        time: json['time'] ?? '-',
-        punchIn: DateTime.parse(json['punch_in']) ?? '-',
-        punchOut: DateTime.parse(json['punch_out']) ?? '-',
-        status: RoomStatus.fromJson(json['status']) ?? false,
+        time: json['time'],
+        punchIn: DateTime.parse(json['punch_in']),
+        punchOut: DateTime.parse(json['punch_out']),
+        status: RoomStatus.fromJson(json['status']),
         enrolled: json['enrolled'],
         lecturer: Lecturer.fromJson(json['lecturer']),
-        subject: json['subject'] ?? '-',
+        subject: json['subject'],
       );
     }
   }

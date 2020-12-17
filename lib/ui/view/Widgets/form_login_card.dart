@@ -111,51 +111,53 @@ class _WidgetFormLoginState extends State<WidgetFormLogin> {
                           ),
                         ),
                       ),
-                      BlocBuilder<PageBloc, PageState>(builder: (context, state) {
-                        if (state is StudentLoginViewState) {
-                          return TextFormField(
-                            decoration: InputDecoration(
-                              filled: true,
-                              isDense: true,
-                              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                              hintText: 'Student ID',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(32.0),
+                      BlocBuilder<PageBloc, PageState>(
+                        builder: (context, state) {
+                          if (state is StudentLoginViewState) {
+                            return TextFormField(
+                              decoration: InputDecoration(
+                                filled: true,
+                                isDense: true,
+                                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                hintText: 'Student ID',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(32.0),
+                                ),
                               ),
-                            ),
-                            controller: _studentIdController,
-                            keyboardType: TextInputType.name,
-                            autocorrect: false,
-                            validator: (value) {
-                              if (value == null) {
-                                return 'student id is required.';
-                              }
-                              return null;
-                            },
-                          );
-                        } else {
-                          return TextFormField(
-                            decoration: InputDecoration(
-                              filled: true,
-                              isDense: true,
-                              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                              hintText: 'Lecturer Email',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(32.0),
+                              controller: _studentIdController,
+                              keyboardType: TextInputType.name,
+                              autocorrect: false,
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Student id is required.';
+                                }
+                                return null;
+                              },
+                            );
+                          } else {
+                            return TextFormField(
+                              decoration: InputDecoration(
+                                filled: true,
+                                isDense: true,
+                                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                hintText: 'Lecturer Email',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(32.0),
+                                ),
                               ),
-                            ),
-                            controller: _lecturerEmailController,
-                            keyboardType: TextInputType.emailAddress,
-                            autocorrect: false,
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Email is required.';
-                              }
-                              return null;
-                            },
-                          );
-                        }
-                      }),
+                              controller: _lecturerEmailController,
+                              keyboardType: TextInputType.emailAddress,
+                              autocorrect: false,
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Email is required.';
+                                }
+                                return null;
+                              },
+                            );
+                          }
+                        },
+                      ),
                       SizedBox(
                         height: 12,
                       ),

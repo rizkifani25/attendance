@@ -12,12 +12,12 @@ class RoomInitial extends RoomState {}
 class RoomFetchLoading extends RoomState {}
 
 class GetRoomHistorySuccess extends RoomState {
-  final List<RoomDetailResponse> roomDetailResponse;
+  final List<RoomDetail> roomDetail;
 
-  GetRoomHistorySuccess({this.roomDetailResponse});
+  GetRoomHistorySuccess({this.roomDetail});
 
   @override
-  List<Object> get props => [roomDetailResponse];
+  List<Object> get props => [roomDetail];
 }
 
 class RoomFetchingSuccess extends RoomState {

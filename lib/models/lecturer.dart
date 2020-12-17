@@ -1,11 +1,10 @@
 import 'package:attendance/models/models.dart';
-import 'package:flutter/foundation.dart';
 
 class Lecturer {
   String lecturerEmail;
   String lecturerName;
   String password;
-  List<Room> historyRoom;
+  List<RoomHistory> historyRoom;
 
   Lecturer({this.lecturerEmail, this.lecturerName, this.password, this.historyRoom});
 
@@ -21,7 +20,8 @@ class Lecturer {
   factory Lecturer.fromJson(Map<String, dynamic> json) {
     if (json['history_room'] != null) {
       var tagObjsJson = json['history_room'] as List;
-      List<Room> _historyRoom = tagObjsJson.map((e) => Room.fromJson(e)).toList();
+      List<RoomHistory> _historyRoom = tagObjsJson.map((e) => RoomHistory.fromJson(e)).toList();
+
       return Lecturer(
         lecturerEmail: json['lecturer_email'],
         lecturerName: json['lecturer_name'],
@@ -36,22 +36,5 @@ class Lecturer {
         historyRoom: json['history_room'],
       );
     }
-  }
-
-  @override
-  String toString() {
-    return 'Lecturer(lecturerEmail: $lecturerEmail, lecturerName: $lecturerName, password: $password, historyRoom: $historyRoom)';
-  }
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is Lecturer && o.lecturerEmail == lecturerEmail && o.lecturerName == lecturerName && o.password == password && listEquals(o.historyRoom, historyRoom);
-  }
-
-  @override
-  int get hashCode {
-    return lecturerEmail.hashCode ^ lecturerName.hashCode ^ password.hashCode ^ historyRoom.hashCode;
   }
 }

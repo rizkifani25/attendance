@@ -5,10 +5,12 @@ import 'package:attendance/ui/view/Lecturer/Widgets/card_info_lecturer.dart';
 import 'package:attendance/ui/view/Lecturer/Widgets/divider.dart';
 import 'package:attendance/ui/view/Widgets/font.dart';
 import 'package:attendance/ui/view/Widgets/history_room.dart';
+import 'package:attendance/ui/view/Widgets/loading_indicator.dart';
 import 'package:attendance/ui/view/Widgets/log_out_button.dart';
 import 'package:attendance/ui/view/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class LecturerBaseView extends StatefulWidget {
   @override
@@ -41,9 +43,28 @@ class _LecturerBaseViewState extends State<LecturerBaseView> {
               homePageContentList: [
                 WidgetDivider(),
                 WidgetCardInfoLecturer(),
-                Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: WidgetFont(text: 'Today\'s Class', color: primaryColor, weight: FontWeight.bold, fontSize: 20),
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 20),
+                      child: WidgetFont(text: 'Today\'s Class', color: primaryColor, weight: FontWeight.bold, fontSize: 20),
+                    ),
+                    Container(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.refresh,
+                          color: primaryColor,
+                        ),
+                        onPressed: () => BlocProvider.of<RoomBloc>(context).add(
+                          GetInfoRoomHistory(
+                            studentId: '',
+                            lecturerEmail: state.lecturer.lecturerEmail,
+                            date: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 WidgetHistoryRoom(),
               ],
@@ -58,11 +79,7 @@ class _LecturerBaseViewState extends State<LecturerBaseView> {
               ],
             );
           }
-          return Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-            ),
-          );
+          return WidgetLoadingIndicator(color: primaryColor);
         },
       ),
     );

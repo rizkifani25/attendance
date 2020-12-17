@@ -26,31 +26,30 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: 
-  hexcolor: 
-  sliding_up_panel: 
-  fading_edge_scrollview: 
+  permission_handler: ^4.2.0+hotfix.3
+  cupertino_icons:
+  sliding_up_panel:  
   camera: 
   path_provider: 
-  video_player: 
   flutter_launcher_icons:
   bloc:
   equatable:
   flutter_bloc:
-  syncfusion_flutter_datepicker:
   fluttertoast:
   flutter_spinkit:
   shared_preferences:
   http:
-  modal_bottom_sheet:
   badges:
   expandable:
-  date_picker_timeline:
   geolocator:
   firebase_storage:
   firebase_core:
   shimmer:
-  pull_to_refresh:
+  connectivity:
+  page_transition:
+  date_picker_timeline:
+  syncfusion_flutter_datepicker:
+  
     
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,4 @@
-import 'package:attendance/models/room.dart';
+import 'package:attendance/models/models.dart';
 
 class Student {
   String studentId;
@@ -6,16 +6,9 @@ class Student {
   String password;
   String batch;
   String major;
-  List<Room> historyRoom;
+  List<RoomHistory> historyRoom;
 
-  Student({
-    this.studentId,
-    this.studentName,
-    this.password,
-    this.batch,
-    this.major,
-    this.historyRoom,
-  });
+  Student({this.studentId, this.studentName, this.password, this.batch, this.major, this.historyRoom});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
@@ -31,7 +24,8 @@ class Student {
   factory Student.fromJson(Map<String, dynamic> json) {
     if (json['history_room'] != null) {
       var tagObjsJson = json['history_room'] as List;
-      List<Room> _historyRoom = tagObjsJson.map((e) => Room.fromJson(e)).toList();
+      List<RoomHistory> _historyRoom = tagObjsJson.map((e) => RoomHistory.fromJson(e)).toList();
+
       return Student(
         studentId: json['student_id'],
         studentName: json['student_name'],

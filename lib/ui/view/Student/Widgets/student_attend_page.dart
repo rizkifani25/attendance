@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:attendance/models/models.dart';
-import 'package:intl/intl.dart';
 import 'package:attendance/constant/Constant.dart';
-import 'package:attendance/models/attend_student.dart';
-import 'package:attendance/models/out_student.dart';
-import 'package:attendance/models/position.dart';
-import 'package:attendance/ui/logic/bloc/student/student_bloc.dart';
+import 'package:attendance/ui/logic/bloc/bloc.dart';
+import 'package:attendance/ui/view/Widgets/custom_dialog.dart';
+import 'package:attendance/ui/view/Widgets/loading_indicator.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -154,7 +152,7 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
 
   void logError(String code, String message) => print('Error: $code\nMessage: $message');
 
-  void _handleAttendButton() async {
+  void _handleAttendButton({BuildContext parentContext}) async {
     if (imagePath != null) {
       AttendStudent _attendStudent = new AttendStudent();
       PositionStudent _positionStudent = new PositionStudent();
@@ -168,18 +166,48 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
       _attendStudent.positionStudent = _positionStudent;
       _attendStudent.time = DateTime.now();
 
-      BlocProvider.of<StudentBloc>(context).add(
-        StudentDoAttend(
-          attendStudent: _attendStudent,
-          roomId: widget.roomId,
-          studentId: widget.student.studentId,
-          time: widget.time,
-        ),
+      return showDialog(
+        context: parentContext,
+        builder: (BuildContext context) {
+          return CustomDialogBox(
+            children: [
+              SizedBox(height: 50),
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  'Are you sure want to attend the class?',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    BlocProvider.of<StudentBloc>(context).add(
+                      StudentDoAttend(
+                        attendStudent: _attendStudent,
+                        roomId: widget.roomId,
+                        studentId: widget.student.studentId,
+                        time: widget.time,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Yes',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       );
     }
   }
 
-  void _handleOutButton() async {
+  void _handleOutButton({BuildContext parentContext}) async {
     if (imagePath != null) {
       OutStudent _outStudent = new OutStudent();
       PositionStudent _positionStudent = new PositionStudent();
@@ -193,13 +221,43 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
       _outStudent.positionStudent = _positionStudent;
       _outStudent.time = DateTime.now();
 
-      BlocProvider.of<StudentBloc>(context).add(
-        StudentDoOut(
-          outStudent: _outStudent,
-          roomId: widget.roomId,
-          studentId: widget.student.studentId,
-          time: widget.time,
-        ),
+      return showDialog(
+        context: parentContext,
+        builder: (BuildContext context) {
+          return CustomDialogBox(
+            children: [
+              SizedBox(height: 50),
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  'Are you sure want to out the class?',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    BlocProvider.of<StudentBloc>(context).add(
+                      StudentDoOut(
+                        outStudent: _outStudent,
+                        roomId: widget.roomId,
+                        studentId: widget.student.studentId,
+                        time: widget.time,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Yes',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       );
     }
   }
@@ -299,7 +357,7 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
             ),
             SlidingUpPanel(
               minHeight: 0,
-              maxHeight: MediaQuery.of(context).size.height / 1.17,
+              maxHeight: MediaQuery.of(context).size.height * 0.95,
               controller: _pc1,
               color: transparentColor,
               defaultPanelState: PanelState.CLOSED,
@@ -320,12 +378,7 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
                       Container(
                         margin: EdgeInsets.all(20),
                         child: imagePath == null || position == null
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  backgroundColor: primaryColor,
-                                ),
-                              )
+                            ? WidgetLoadingIndicator(color: primaryColor)
                             : Column(
                                 children: [
                                   Container(
@@ -334,37 +387,37 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
                                       File(imagePath),
                                     ),
                                   ),
-                                  Container(
-                                    child: Text(
-                                      'Location :: ' + position.latitude.toString() + ', ' + position.longitude.toString(),
-                                      style: TextStyle(fontSize: 20, color: textColor),
-                                    ),
-                                  ),
                                   Text(
                                     widget.roomId == null ? '' : widget.roomId,
-                                    style: TextStyle(fontSize: 20, color: textColor),
+                                    style: TextStyle(fontSize: 16, color: textColor),
                                   ),
                                   Text(
-                                    widget.student.studentId == null ? '' : widget.student.studentId,
-                                    style: TextStyle(fontSize: 20, color: textColor),
+                                    widget.student.studentName == null ? '' : widget.student.studentName,
+                                    style: TextStyle(fontSize: 16, color: textColor),
                                   ),
                                   Text(
-                                    'Distance :: ' + _distance.toStringAsFixed(2) + ' meters',
-                                    style: TextStyle(fontSize: 20, color: textColor),
+                                    'Location ' + position.latitude.toString() + ', ' + position.longitude.toString(),
+                                    style: TextStyle(fontSize: 16, color: textColor),
+                                  ),
+                                  Text(
+                                    'Distance ' + _distance.toStringAsFixed(2) + ' meters',
+                                    style: TextStyle(fontSize: 16, color: textColor),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       RaisedButton(
-                                        child: Text('ATTEND'),
+                                        color: greenColor,
+                                        child: Text('Attend', style: TextStyle(color: textColor)),
                                         onPressed: () {
-                                          _handleAttendButton();
+                                          _handleAttendButton(parentContext: context);
                                         },
                                       ),
                                       RaisedButton(
-                                        child: Text('OUT'),
+                                        color: redColor,
+                                        child: Text('Out', style: TextStyle(color: textColor)),
                                         onPressed: () {
-                                          _handleOutButton();
+                                          _handleOutButton(parentContext: context);
                                         },
                                       ),
                                     ],

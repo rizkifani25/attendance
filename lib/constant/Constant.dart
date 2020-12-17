@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 
 // URI
-final String apiURL = 'https://d82dca9c4389.ngrok.io/';
-
-// endpoint
-final String dashboardScreen = '/dashboard';
-final String loginScreen = '/login';
-final String studentScreen = '/student';
-final String roomScreen = '/room';
+final String apiURL = 'http://03c664283704.ngrok.io/';
 
 // position
 final double latitudeBuildingA = -6.284903;

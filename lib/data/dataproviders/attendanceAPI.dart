@@ -12,6 +12,7 @@ class AttendanceApi {
 
   // Lecturer
   Future<BasicResponse> loginLecturer(String lecturerEmail, String password) async {
+    BasicResponse basicResponse;
     try {
       LoginLecturerRequest loginLecturerRequest = new LoginLecturerRequest();
 
@@ -27,18 +28,21 @@ class AttendanceApi {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Failure');
+        basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+        return basicResponse;
       }
 
-      BasicResponse basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
 
       return basicResponse;
     } catch (e) {
-      throw Exception('Failure');
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
     }
   }
 
-  Future<Lecturer> findLecturer(String lecturerEmail) async {
+  Future<BasicResponse> findLecturer(String lecturerEmail) async {
+    BasicResponse basicResponse;
     try {
       final String getLecturerInfoUrl = apiURL + 'lecturer/list?lecturer_email=' + lecturerEmail;
       var response = await http.post(getLecturerInfoUrl);
@@ -47,33 +51,35 @@ class AttendanceApi {
         throw Exception('Failure');
       }
 
-      var responseBody = jsonDecode(response.body);
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
 
-      Lecturer lecturer = Lecturer.fromJson(responseBody['data'][0]);
-
-      return lecturer;
+      return basicResponse;
     } catch (e) {
       print(e.toString());
-      throw Exception('Failure');
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
     }
   }
 
   // Student
   Future<BasicResponse> loginStudent(String studentId, String password) async {
+    BasicResponse basicResponse;
+
     try {
       final String loginStudentUrl = apiURL + 'student/login?student_id=' + studentId + '&password=' + password;
 
       var response = await http.post(loginStudentUrl);
       if (response.statusCode != 200) {
-        throw Exception('Failure');
+        basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+        return basicResponse;
       }
 
-      BasicResponse basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
 
       return basicResponse;
     } catch (e) {
-      print(e.toString());
-      throw Exception('Failure');
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
     }
   }
 
@@ -97,32 +103,9 @@ class AttendanceApi {
     }
   }
 
-  Future<List<RoomDetailResponse>> getRoomHistory(String studentId, String date) async {
-    try {
-      final String roomHistoryUrl = apiURL + 'student/history?student_id=' + studentId + '&date=' + date;
-
-      var response = await http.post(roomHistoryUrl);
-
-      if (response.statusCode != 200) {
-        throw Exception('Failure');
-      }
-
-      var responseBody = jsonDecode(response.body);
-      if (responseBody['responseCode'] != 200) {
-        throw Exception('Failure');
-      }
-
-      var responseData = responseBody['data'] as List;
-      List<RoomDetailResponse> _roomHistory = responseData.map((e) => RoomDetailResponse.fromJson(e)).toList();
-
-      return _roomHistory;
-    } catch (e) {
-      print(e.toString());
-      throw Exception('Failure');
-    }
-  }
-
   Future<BasicResponse> studentDoAttend(AttendStudent _attendStudent, String _roomId, String _studentId, String _time) async {
+    BasicResponse basicResponse;
+
     try {
       await Firebase.initializeApp();
       final String roomHistoryUrl = apiURL + 'student/attend';
@@ -137,7 +120,6 @@ class AttendanceApi {
 
       _attendStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '.jpg';
 
-      print('masuk sini');
       AttendStudentRequest attendStudentRequest = new AttendStudentRequest();
       attendStudentRequest.attendStudent = _attendStudent;
       attendStudentRequest.roomId = _roomId;
@@ -153,22 +135,23 @@ class AttendanceApi {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Failure');
+        basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+        return basicResponse;
       }
 
-      var responseBody = jsonDecode(response.body);
-      if (responseBody['responseCode'] != 200) {
-        throw Exception('Failure');
-      }
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
 
-      return responseBody;
+      return basicResponse;
     } catch (e) {
       print(e.toString());
-      throw Exception('Failure');
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
     }
   }
 
   Future<BasicResponse> studentDoOut(OutStudent _outStudent, String _roomId, String _studentId, String _time) async {
+    BasicResponse basicResponse;
+
     try {
       await Firebase.initializeApp();
       final String roomHistoryUrl = apiURL + 'student/attend';
@@ -199,23 +182,23 @@ class AttendanceApi {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Failure');
+        basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+        return basicResponse;
       }
 
-      var responseBody = jsonDecode(response.body);
-      if (responseBody['responseCode'] != 200) {
-        throw Exception('Failure');
-      }
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
 
-      return responseBody;
+      return basicResponse;
     } catch (e) {
       print(e.toString());
-      throw Exception('Failure');
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
     }
   }
 
   // Room
   Future<BasicResponse> getInfoRoomHistory({String studentId, String lecturerEmail, String date}) async {
+    BasicResponse basicResponse;
     try {
       String roomHistoryStudentUrl = apiURL + 'room/history?student_id=' + studentId + '&date=' + date;
       String roomHistoryLecturerUrl = apiURL + 'room/history?lecturer_email=' + lecturerEmail + '&date=' + date;
@@ -228,12 +211,12 @@ class AttendanceApi {
         throw Exception('Failure');
       }
 
-      BasicResponse basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
 
       return basicResponse;
     } catch (e) {
-      print(e.toString());
-      throw Exception('Failure');
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
     }
   }
 

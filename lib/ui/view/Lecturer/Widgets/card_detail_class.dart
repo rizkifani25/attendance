@@ -1,6 +1,7 @@
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/models.dart';
 import 'package:attendance/ui/logic/bloc/bloc.dart';
+import 'package:attendance/ui/view/Widgets/custom_dialog.dart';
 import 'package:attendance/ui/view/Widgets/font.dart';
 import 'package:attendance/ui/view/Widgets/notification_snackbar.dart';
 import 'package:intl/intl.dart';
@@ -8,12 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WidgetLecturerCardDetailClass extends StatelessWidget {
-  final RoomDetailResponse roomDetail;
+  final RoomDetail roomDetail;
   final Time time;
 
   WidgetLecturerCardDetailClass({this.roomDetail, this.time});
 
-  _handleUpdateData({BuildContext context, String statusMessage}) {
+  _handleUpdateData({BuildContext parentContext, String statusMessage}) {
     Time updatedTime = new Time(
       time: time.time,
       status: new RoomStatus(status: true, statusMessage: statusMessage),
@@ -21,7 +22,7 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
       lecturer: time.lecturer,
       subject: time.subject,
     );
-    BlocProvider.of<RoomBloc>(context).add(
+    BlocProvider.of<RoomBloc>(parentContext).add(
       UpdateRoomData(
         date: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
         time: time.time == '07.30 - 09.30'
@@ -35,12 +36,51 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
         updatedTime: updatedTime,
       ),
     );
-    BlocProvider.of<RoomBloc>(context).add(
+    BlocProvider.of<RoomBloc>(parentContext).add(
       GetInfoRoomHistory(
         studentId: '',
         lecturerEmail: time.lecturer.lecturerEmail,
         date: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
       ),
+    );
+  }
+
+  _handleUpdateButton({BuildContext parentContext, String title, String notificationMessage, Color color, String statusMessage}) {
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return CustomDialogBox(
+          children: [
+            SizedBox(height: 50),
+            Container(
+              margin: EdgeInsets.all(15),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 22),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _handleUpdateData(parentContext: parentContext, statusMessage: statusMessage);
+                  WidgetNotificationSnackbar().render(
+                    context: parentContext,
+                    color: color,
+                    message: notificationMessage,
+                  );
+                },
+                child: Text(
+                  'Yes',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -95,10 +135,11 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
                                   message: 'Class can only started at the scheduled time',
                                 );
                               } else if (dateNow.isAfter(time.punchIn) && dateNow.isBefore(time.punchOut) && time.status.statusMessage == 'Booked') {
-                                _handleUpdateData(context: context, statusMessage: 'On going');
-                                WidgetNotificationSnackbar().render(
-                                  context: context,
-                                  message: 'Class started',
+                                _handleUpdateButton(
+                                  parentContext: context,
+                                  statusMessage: 'On going',
+                                  notificationMessage: 'Class started',
+                                  title: 'Are you sure want to start the class?',
                                 );
                               } else {
                                 WidgetNotificationSnackbar().render(
@@ -126,17 +167,18 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
                             }
                           : () {
                               DateTime dateNow = DateTime.now();
-                              if ((dateNow.isBefore(time.punchIn) || dateNow.isAfter(time.punchOut)) || time.status.statusMessage == 'On going') {
+                              if (dateNow.isBefore(time.punchIn) || dateNow.isAfter(time.punchOut) || time.status.statusMessage == 'On going') {
                                 WidgetNotificationSnackbar().render(
                                   context: context,
                                   color: redColor,
                                   message: 'Class can only dismissed at the scheduled time',
                                 );
                               } else if (dateNow.isAfter(time.punchIn) && dateNow.isBefore(time.punchOut) && time.status.statusMessage == 'On going') {
-                                _handleUpdateData(context: context, statusMessage: 'Dismissed');
-                                WidgetNotificationSnackbar().render(
-                                  context: context,
-                                  message: 'Class dismiss',
+                                _handleUpdateButton(
+                                  parentContext: context,
+                                  statusMessage: 'Dismissed',
+                                  title: 'Are you sure want to dismiss the class?',
+                                  notificationMessage: 'Class dismiss',
                                 );
                               } else {
                                 WidgetNotificationSnackbar().render(
@@ -162,10 +204,11 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
                               );
                             }
                           : () {
-                              _handleUpdateData(context: context, statusMessage: 'Dismissed');
-                              WidgetNotificationSnackbar().render(
-                                context: context,
-                                message: 'Class dismiss',
+                              _handleUpdateButton(
+                                parentContext: context,
+                                statusMessage: 'Dismissed',
+                                title: 'Are you sure want to dismiss the class? (Class will be directly dismiss)',
+                                notificationMessage: 'Class dismiss',
                               );
                             },
                     ),
