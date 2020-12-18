@@ -138,8 +138,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   _loadWidget() async {
     String lecturer = await SessionManagerService().getLecturer();
-    // String student = await SessionManagerService().getStudent();
-    print(lecturer);
     lecturer != '' ? _mode = 'lecturer' : _mode = 'student';
 
     var _duration = Duration(seconds: splashDelay);
@@ -147,7 +145,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   void navigationPage() {
-    print(_mode);
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) {
       if (_mode == 'lecturer') {
         BlocProvider.of<PageBloc>(context).add(RenderSelectedPage(pageState: 'loginLecturer'));

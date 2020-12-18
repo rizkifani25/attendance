@@ -39,6 +39,7 @@ class _LecturerBaseViewState extends State<LecturerBaseView> {
                 Center(
                   child: WidgetFont(text: 'History Class', color: primaryColor, weight: FontWeight.bold),
                 ),
+                WidgetHistoryRoom(fromHistoryPanel: true),
               ],
               homePageContentList: [
                 WidgetDivider(),
@@ -66,7 +67,7 @@ class _LecturerBaseViewState extends State<LecturerBaseView> {
                     ),
                   ],
                 ),
-                WidgetHistoryRoom(),
+                WidgetHistoryRoom(fromHistoryPanel: false),
               ],
               profilePageContentList: [
                 WidgetDivider(),

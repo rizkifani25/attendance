@@ -58,11 +58,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       List<Lecturer> listLecturer = rawObject.map((e) => Lecturer.fromJson(e)).toList();
       Lecturer currentLecturer = lecturerEmail != '' ? listLecturer.first : null;
 
-      print('===== TESTING =====');
-      print(lecturerEmail);
-      print(currentLecturer.lecturerEmail);
-      print('===== TESTING =====');
-
       if (currentLecturer != null) {
         yield AuthLecturerAuthenticated(lecturer: currentLecturer);
       } else {
@@ -87,14 +82,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _mapAppLoadedStudentToState(AppLoadedStudent event) async* {
     yield AuthLoading();
     try {
-      final Student currenStudent = await studentRepository.getStudentLoginInfo();
-      if (currenStudent != null) {
-        yield AuthStudentAuthenticated(student: currenStudent);
+      String studentId = await SessionManagerService().getStudent();
+      BasicResponse basicResponse = await studentRepository.getStudentLoginInfo(studentId);
+
+      var rawObject = basicResponse.data as List;
+      List<Student> listStudent = rawObject.map((e) => Student.fromJson(e)).toList();
+      Student currentStudent = studentId != '' ? listStudent.first : null;
+
+      if (currentStudent != null) {
+        yield AuthStudentAuthenticated(student: currentStudent);
       } else {
         yield AuthStudentNotAuthenticated();
       }
     } catch (e) {
-      yield AuthFailure(message: e ?? 'An unknown error occurred when auth');
+      print(e.toString());
+      yield AuthFailure(message: 'An unknown error occurred when auth');
     }
   }
 

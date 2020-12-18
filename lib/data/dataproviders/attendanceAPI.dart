@@ -48,7 +48,8 @@ class AttendanceApi {
       var response = await http.post(getLecturerInfoUrl);
 
       if (response.statusCode != 200) {
-        throw Exception('Failure');
+        basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+        return basicResponse;
       }
 
       basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
@@ -83,23 +84,24 @@ class AttendanceApi {
     }
   }
 
-  Future<Student> findStudent(String studentId) async {
+  Future<BasicResponse> findStudent(String studentId) async {
+    BasicResponse basicResponse;
     try {
       final String getStudentInfoUrl = apiURL + 'student/list?student_id=' + studentId;
       var response = await http.post(getStudentInfoUrl);
 
       if (response.statusCode != 200) {
-        throw Exception('Failure');
+        basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+        return basicResponse;
       }
 
-      var responseBody = jsonDecode(response.body);
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
 
-      Student student = Student.fromJson(responseBody['data'][0]);
-
-      return student;
+      return basicResponse;
     } catch (e) {
       print(e.toString());
-      throw Exception('Failure');
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
     }
   }
 
@@ -179,6 +181,43 @@ class AttendanceApi {
         roomHistoryUrl,
         headers: requestHeaders,
         body: jsonEncode(outStudentRequest.toJson()),
+      );
+
+      if (response.statusCode != 200) {
+        basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+        return basicResponse;
+      }
+
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
+
+      return basicResponse;
+    } catch (e) {
+      print(e.toString());
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
+    }
+  }
+
+  Future<BasicResponse> studentDoPermission(Permission _permission, String _roomId, String _studentId, String _time) async {
+    BasicResponse basicResponse;
+
+    try {
+      await Firebase.initializeApp();
+      final String roomHistoryUrl = apiURL + 'student/attend';
+      Map<String, String> requestHeaders = {'Content-type': 'application/json'};
+
+      PermissionStudentRequest permissionStudentRequest = new PermissionStudentRequest();
+      permissionStudentRequest.permission = _permission;
+      permissionStudentRequest.roomId = _roomId;
+      permissionStudentRequest.studentId = _studentId;
+      permissionStudentRequest.time = _time;
+
+      print(jsonEncode(permissionStudentRequest.toJson()));
+
+      var response = await http.post(
+        roomHistoryUrl,
+        headers: requestHeaders,
+        body: jsonEncode(permissionStudentRequest.toJson()),
       );
 
       if (response.statusCode != 200) {

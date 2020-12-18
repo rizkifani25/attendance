@@ -1,19 +1,63 @@
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/models.dart';
+import 'package:attendance/ui/logic/bloc/bloc.dart';
 import 'package:attendance/ui/view/Student/Widgets/student_attend_page.dart';
 import 'package:attendance/ui/view/Widgets/custom_dialog.dart';
 import 'package:attendance/ui/view/Widgets/font.dart';
 import 'package:attendance/ui/view/Widgets/notification_snackbar.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WidgetStudentCardDetailClass extends StatelessWidget {
   final List<CameraDescription> cameras;
   final RoomDetail roomDetail;
   final Time time;
   final Student student;
+  final _studentPermissionController = TextEditingController();
 
   WidgetStudentCardDetailClass({this.cameras, this.roomDetail, this.time, this.student});
+
+  Permission _getStudentPermission() {
+    Permission permission;
+    for (var i = 0; i < time.enrolled.length; i++) {
+      if (time.enrolled[i].student.studentId == student.studentId) {
+        permission = time.enrolled[i].permission;
+      }
+    }
+    return permission;
+  }
+
+  _handleSendPermission({BuildContext parentContext}) async {
+    if (_studentPermissionController.text != '') {
+      Permission permission = new Permission();
+      permission.reason = _studentPermissionController.text;
+      permission.statusPermission = '';
+      permission.datePermission = DateTime.now();
+
+      BlocProvider.of<StudentBloc>(parentContext).add(
+        StudentDoPermission(
+          permission: permission,
+          roomId: roomDetail.roomId,
+          studentId: student.studentId,
+          time: time.time,
+        ),
+      );
+    } else {
+      Permission permission = new Permission();
+      permission.reason = '';
+      permission.statusPermission = '';
+
+      BlocProvider.of<StudentBloc>(parentContext).add(
+        StudentDoPermission(
+          permission: permission,
+          roomId: roomDetail.roomId,
+          studentId: student.studentId,
+          time: time.time,
+        ),
+      );
+    }
+  }
 
   _handlePermissionButton({BuildContext parentContext}) {
     return showDialog(
@@ -24,24 +68,39 @@ class WidgetStudentCardDetailClass extends StatelessWidget {
             SizedBox(height: 50),
             Container(
               alignment: Alignment.center,
-              child: Text(
-                'PERMISSION',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              padding: EdgeInsets.all(20),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  filled: true,
+                  isDense: true,
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                  hintText: 'Permission',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                ),
+                controller: _studentPermissionController,
+                keyboardType: TextInputType.text,
+                autocorrect: false,
               ),
             ),
             Align(
               alignment: Alignment.bottomRight,
-              child: FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  WidgetNotificationSnackbar().render(
-                    context: parentContext,
-                    message: 'Permission sent',
-                  );
-                },
-                child: Text(
-                  'Send',
-                  style: TextStyle(fontSize: 18),
+              child: Container(
+                margin: EdgeInsets.all(10),
+                child: FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _handleSendPermission(parentContext: context);
+                    WidgetNotificationSnackbar().render(
+                      context: parentContext,
+                      message: 'Permission sent',
+                    );
+                  },
+                  child: Text(
+                    'Send',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
             ),
@@ -53,6 +112,8 @@ class WidgetStudentCardDetailClass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Permission studentPermission = _getStudentPermission();
+
     return InkWell(
       child: Container(
         margin: EdgeInsets.all(10),
@@ -78,8 +139,14 @@ class WidgetStudentCardDetailClass extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.all(10),
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 child: WidgetFont(text: time.lecturer.lecturerName, color: secondaryColor, fontSize: 16),
+              ),
+              SizedBox(height: 10),
+              Container(
+                padding: EdgeInsets.all(10),
+                alignment: Alignment.centerLeft,
+                child: WidgetFont(text: 'Permission : ' + studentPermission.reason, color: secondaryColor, fontSize: 16),
               ),
               SizedBox(height: 10),
               Container(

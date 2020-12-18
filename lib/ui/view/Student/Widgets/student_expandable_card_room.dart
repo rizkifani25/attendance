@@ -1,5 +1,6 @@
 import 'package:attendance/models/models.dart';
 import 'package:attendance/ui/view/Student/Widgets/student_card_detail_class.dart';
+import 'package:attendance/ui/view/Student/Widgets/student_history_class_card.dart';
 import 'package:camera/camera.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,8 +10,9 @@ class WidgetStudentExpandableCardRoom extends StatelessWidget {
   final List<CameraDescription> cameras;
   final RoomDetail roomDetail;
   final Student student;
+  final bool fromHistoryPanel;
 
-  WidgetStudentExpandableCardRoom({this.cameras, this.roomDetail, this.student});
+  WidgetStudentExpandableCardRoom({this.cameras, this.roomDetail, this.student, this.fromHistoryPanel});
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +77,13 @@ class WidgetStudentExpandableCardRoom extends StatelessWidget {
                   ),
                   expanded: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: listTime.map((e) {
-                      return WidgetStudentCardDetailClass(cameras: cameras, roomDetail: roomDetail, time: e, student: student);
-                    }).toList(),
+                    children: fromHistoryPanel
+                        ? listTime.map((e) {
+                            return StudentHistoryCard(roomDetail: roomDetail, time: e, student: student);
+                          }).toList()
+                        : listTime.map((e) {
+                            return WidgetStudentCardDetailClass(cameras: cameras, roomDetail: roomDetail, time: e, student: student);
+                          }).toList(),
                   ),
                   builder: (_, collapsed, expanded) {
                     return Padding(

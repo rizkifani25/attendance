@@ -2,6 +2,7 @@ export 'request/attend_student_request.dart';
 export 'request/out_student_request.dart';
 export 'request/login_lecturer_request.dart';
 export 'request/register_room_request.dart';
+export 'request/permission_student_request.dart';
 
 export 'response/basic_response.dart';
 

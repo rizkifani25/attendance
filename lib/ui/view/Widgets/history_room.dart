@@ -1,6 +1,8 @@
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/models.dart';
 import 'package:attendance/ui/view/Student/Widgets/student_expandable_card_room.dart';
+import 'package:attendance/ui/view/Widgets/calendar.dart';
+import 'package:attendance/ui/view/Widgets/custom_dialog.dart';
 import 'package:attendance/ui/view/Widgets/loading_indicator.dart';
 import 'package:attendance/ui/view/Widgets/notification_snackbar.dart';
 import 'package:camera/camera.dart';
@@ -12,8 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WidgetHistoryRoom extends StatelessWidget {
   final List<CameraDescription> cameras;
+  final bool fromHistoryPanel;
 
-  WidgetHistoryRoom({this.cameras});
+  WidgetHistoryRoom({this.cameras, this.fromHistoryPanel});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +37,7 @@ class WidgetHistoryRoom extends StatelessWidget {
             return _RoomDetail(
               listRoom: state.lecturer.historyRoom,
               lecturer: state.lecturer,
+              fromHistoryPanel: fromHistoryPanel,
             );
           }
         }
@@ -53,6 +57,7 @@ class WidgetHistoryRoom extends StatelessWidget {
               cameras: cameras,
               listRoom: state.student.historyRoom,
               student: state.student,
+              fromHistoryPanel: fromHistoryPanel,
             );
           }
         }
@@ -67,14 +72,17 @@ class _RoomDetail extends StatefulWidget {
   final List<RoomHistory> listRoom;
   final Lecturer lecturer;
   final Student student;
+  final bool fromHistoryPanel;
 
-  _RoomDetail({this.cameras, this.listRoom, this.lecturer, this.student});
+  _RoomDetail({this.cameras, this.listRoom, this.lecturer, this.student, this.fromHistoryPanel});
 
   @override
   __RoomDetailState createState() => __RoomDetailState();
 }
 
 class __RoomDetailState extends State<_RoomDetail> {
+  String date;
+
   @override
   void initState() {
     if (widget.lecturer != null) {
@@ -82,7 +90,7 @@ class __RoomDetailState extends State<_RoomDetail> {
         GetInfoRoomHistory(
           studentId: '',
           lecturerEmail: widget.lecturer.lecturerEmail,
-          date: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
+          date: widget.fromHistoryPanel ? '' : DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
         ),
       );
     }
@@ -91,7 +99,7 @@ class __RoomDetailState extends State<_RoomDetail> {
         GetInfoRoomHistory(
           studentId: widget.student.studentId,
           lecturerEmail: '',
-          date: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
+          date: widget.fromHistoryPanel ? '' : DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
         ),
       );
     }
@@ -99,49 +107,115 @@ class __RoomDetailState extends State<_RoomDetail> {
     super.initState();
   }
 
+  _handleCalendarButton({BuildContext parentContext}) {
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return CustomDialogBox(
+          children: [
+            SizedBox(height: 50),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Calendar(
+                  onSelectedDate: (value) {
+                    setState(() {
+                      date = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (widget.lecturer != null) {
+        BlocProvider.of<RoomBloc>(context).add(
+          GetInfoRoomHistory(
+            studentId: '',
+            lecturerEmail: widget.lecturer.lecturerEmail,
+            date: date,
+          ),
+        );
+      }
+      if (widget.student != null) {
+        BlocProvider.of<RoomBloc>(context).add(
+          GetInfoRoomHistory(
+            studentId: widget.student.studentId,
+            lecturerEmail: '',
+            date: date,
+          ),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: BlocBuilder<RoomBloc, RoomState>(
-        builder: (context, state) {
-          if (state is GetRoomHistorySuccess) {
-            if (state.roomDetail.isEmpty) {
-              return Container(
-                margin: EdgeInsets.all(20),
-                child: Center(
-                  child: Text(
-                    'Yeay! No class for today',
-                    style: TextStyle(
-                      color: greyColor2,
-                      fontSize: 16,
-                    ),
+      child: Column(
+        children: [
+          (widget.student != null || widget.lecturer != null) && widget.fromHistoryPanel
+              ? IconButton(
+                  icon: Icon(
+                    Icons.calendar_today_rounded,
+                    color: primaryColor,
                   ),
-                ),
-              );
-            } else {
-              return Column(
-                children: state.roomDetail.map(
-                  (e) {
-                    if (widget.lecturer != null) {
-                      return WidgetLecturerExpandableCardRoom(roomDetail: e, lecturer: widget.lecturer);
-                    }
-                    if (widget.student != null) {
-                      return WidgetStudentExpandableCardRoom(cameras: widget.cameras, roomDetail: e, student: widget.student);
-                    }
-                  },
-                ).toList(),
-              );
-            }
-          }
-          if (state is RoomFetchingFailure) {
-            WidgetNotificationSnackbar().render(
-              context: context,
-              color: redColor,
-              message: state.message,
-            );
-          }
-          return WidgetLoadingIndicator(color: primaryColor);
-        },
+                  onPressed: () => _handleCalendarButton(parentContext: context),
+                )
+              : Container(),
+          BlocBuilder<RoomBloc, RoomState>(
+            builder: (context, state) {
+              if (state is GetRoomHistorySuccess) {
+                if (state.roomDetail.isEmpty) {
+                  return Container(
+                    margin: EdgeInsets.all(20),
+                    child: Center(
+                      child: Text(
+                        widget.fromHistoryPanel ? 'Empty' : 'Yeay! No class for today',
+                        style: TextStyle(
+                          color: greyColor2,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Column(
+                    children: state.roomDetail.map(
+                      (e) {
+                        if (widget.lecturer != null) {
+                          return WidgetLecturerExpandableCardRoom(
+                            roomDetail: e,
+                            lecturer: widget.lecturer,
+                            fromHistoryPanel: widget.fromHistoryPanel,
+                          );
+                        }
+                        if (widget.student != null) {
+                          return WidgetStudentExpandableCardRoom(
+                            cameras: widget.cameras,
+                            roomDetail: e,
+                            student: widget.student,
+                            fromHistoryPanel: widget.fromHistoryPanel,
+                          );
+                        }
+                      },
+                    ).toList(),
+                  );
+                }
+              }
+              if (state is RoomFetchingFailure) {
+                WidgetNotificationSnackbar().render(
+                  context: context,
+                  color: redColor,
+                  message: state.message,
+                );
+              }
+              return WidgetLoadingIndicator(color: primaryColor);
+            },
+          ),
+        ],
       ),
     );
   }

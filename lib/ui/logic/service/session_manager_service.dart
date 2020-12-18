@@ -9,6 +9,7 @@ class SessionManagerService {
   Future<void> setLecturer(Lecturer lecturer) async {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(credentialKeyLecturer, lecturer != null ? lecturer.lecturerEmail : '');
+    sharedPreferences.setString(credentialKeyStudent, '');
   }
 
   Future<String> getLecturer() async {
@@ -21,6 +22,7 @@ class SessionManagerService {
   Future<void> setStudent(Student student) async {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(credentialKeyStudent, student != null ? student.studentId : '');
+    sharedPreferences.setString(credentialKeyLecturer, '');
   }
 
   Future<String> getStudent() async {

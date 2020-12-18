@@ -18,11 +18,35 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   Stream<StudentState> mapEventToState(
     StudentEvent event,
   ) async* {
+    if (event is StudentDoPermission) {
+      yield* _mapStudentDoPermissionToState(event);
+    }
     if (event is StudentDoAttend) {
       yield* _mapStudentDoAttendToState(event);
     }
     if (event is StudentDoOut) {
       yield* _mapStudentDoOutToState(event);
+    }
+  }
+
+  Stream<StudentState> _mapStudentDoPermissionToState(StudentDoPermission event) async* {
+    yield StudentFetchLoading();
+    try {
+      final BasicResponse basicResponse = await studentRepository.studentDoPermission(
+        event.permission,
+        event.roomId,
+        event.studentId,
+        event.time,
+      );
+
+      if (basicResponse != null) {
+        yield StudentFetchSuccess();
+      } else {
+        yield StudentFetchFailed(message: 'Failed when fetching');
+      }
+    } catch (e) {
+      print(e.toString());
+      yield StudentFetchFailed(message: 'Something very weird just happened');
     }
   }
 
@@ -42,7 +66,8 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         yield StudentFetchFailed(message: 'Failed when fetching');
       }
     } catch (e) {
-      yield StudentFetchFailed(message: e.toString() ?? 'Something very weird just happened');
+      print(e.toString());
+      yield StudentFetchFailed(message: 'Something very weird just happened');
     }
   }
 
@@ -62,7 +87,8 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
         yield StudentFetchFailed(message: 'Failed when fetching');
       }
     } catch (e) {
-      yield StudentFetchFailed(message: e.toString() ?? 'Something very weird just happened');
+      print(e.toString());
+      yield StudentFetchFailed(message: 'Something very weird just happened');
     }
   }
 }

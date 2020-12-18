@@ -17,6 +17,18 @@ class GetRoomHistory extends StudentEvent {
   List<Object> get props => [studentId, date];
 }
 
+class StudentDoPermission extends StudentEvent {
+  final String roomId;
+  final String studentId;
+  final String time;
+  final Permission permission;
+
+  StudentDoPermission({this.roomId, this.studentId, this.time, this.permission});
+
+  @override
+  List<Object> get props => [roomId, studentId, time, this.permission];
+}
+
 class StudentDoAttend extends StudentEvent {
   final String roomId;
   final String studentId;

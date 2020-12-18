@@ -1,3 +1,5 @@
+import 'package:attendance/ui/view/Widgets/calendar.dart';
+import 'package:attendance/ui/view/Widgets/custom_dialog.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +47,7 @@ class _StudentBaseViewState extends State<StudentBaseView> {
                 Center(
                   child: WidgetFont(text: 'History Class', color: primaryColor, weight: FontWeight.bold),
                 ),
+                WidgetHistoryRoom(fromHistoryPanel: true),
               ],
               homePageContentList: [
                 WidgetDivider(),
@@ -72,7 +75,7 @@ class _StudentBaseViewState extends State<StudentBaseView> {
                     ),
                   ],
                 ),
-                WidgetHistoryRoom(cameras: widget.cameras),
+                WidgetHistoryRoom(cameras: widget.cameras, fromHistoryPanel: false),
               ],
               profilePageContentList: [
                 WidgetDivider(),

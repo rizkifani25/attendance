@@ -12,15 +12,19 @@ class StudentRepository {
     return basicResponse;
   }
 
-  Future<Student> getStudentLoginInfo() async {
-    String studentId = await SessionManagerService().getStudent();
-    Student student = studentId != '' ? await attendanceApi.findStudent(studentId) : null;
-    return student;
+  Future<BasicResponse> getStudentLoginInfo(String studentId) async {
+    BasicResponse basicResponse = await attendanceApi.findStudent(studentId);
+    return basicResponse;
   }
 
   Future<Student> signOutStudent() async {
     SessionManagerService().setStudent(null);
     return null;
+  }
+
+  Future<BasicResponse> studentDoPermission(Permission _permission, String _roomId, String _studentId, String _time) async {
+    BasicResponse basicResponse = await attendanceApi.studentDoPermission(_permission, _roomId, _studentId, _time);
+    return basicResponse;
   }
 
   Future<BasicResponse> studentDoAttend(AttendStudent _attendStudent, String _roomId, String _studentId, String _time) async {
