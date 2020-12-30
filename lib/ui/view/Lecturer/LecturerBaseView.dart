@@ -36,9 +36,7 @@ class _LecturerBaseViewState extends State<LecturerBaseView> {
             return BaseView(
               classPageContentList: [
                 WidgetDivider(),
-                Center(
-                  child: WidgetFont(text: 'History Class', color: primaryColor, weight: FontWeight.bold),
-                ),
+                Center(child: WidgetFont(text: 'History Class', color: primaryColor, weight: FontWeight.bold)),
                 WidgetHistoryRoom(fromHistoryPanel: true),
               ],
               homePageContentList: [
@@ -71,9 +69,7 @@ class _LecturerBaseViewState extends State<LecturerBaseView> {
               ],
               profilePageContentList: [
                 WidgetDivider(),
-                Center(
-                  child: WidgetFont(text: 'Profile', color: primaryColor, weight: FontWeight.bold),
-                ),
+                Center(child: WidgetFont(text: 'Profile', color: primaryColor, weight: FontWeight.bold)),
                 WidgetLogOutButton(
                   handleSignOutButton: () => BlocProvider.of<AuthBloc>(context).add(LecturerLoggedOut()),
                 ),

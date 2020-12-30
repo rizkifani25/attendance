@@ -14,10 +14,10 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
 
   WidgetLecturerCardDetailClass({this.roomDetail, this.time});
 
-  _handleUpdateData({BuildContext parentContext, String statusMessage}) {
+  _handleUpdateData({BuildContext parentContext, RoomStatus roomStatus}) {
     Time updatedTime = new Time(
       time: time.time,
-      status: new RoomStatus(status: true, statusMessage: statusMessage),
+      status: roomStatus,
       enrolled: time.enrolled,
       lecturer: time.lecturer,
       subject: time.subject,
@@ -45,7 +45,7 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
     );
   }
 
-  _handleUpdateButton({BuildContext parentContext, String title, String notificationMessage, Color color, String statusMessage}) {
+  _handleUpdateButton({BuildContext parentContext, String title, String notificationMessage, Color color, RoomStatus roomStatus}) {
     return showDialog(
       context: parentContext,
       builder: (BuildContext context) {
@@ -65,7 +65,7 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
               child: FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  _handleUpdateData(parentContext: parentContext, statusMessage: statusMessage);
+                  _handleUpdateData(parentContext: parentContext, roomStatus: roomStatus);
                   WidgetNotificationSnackbar().render(
                     context: parentContext,
                     color: color,
@@ -137,7 +137,12 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
                               } else if (dateNow.isAfter(time.punchIn) && dateNow.isBefore(time.punchOut) && time.status.statusMessage == 'Booked') {
                                 _handleUpdateButton(
                                   parentContext: context,
-                                  statusMessage: 'On going',
+                                  roomStatus: new RoomStatus(
+                                    status: true,
+                                    statusMessage: 'On going',
+                                    startAt: dateNow.toLocal().toString(),
+                                    dismissAt: time.status.dismissAt,
+                                  ),
                                   notificationMessage: 'Class started',
                                   title: 'Are you sure want to start the class?',
                                 );
@@ -154,44 +159,6 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
                       color: time.status.statusMessage == 'Dismissed' ? greyColor3 : redColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: WidgetFont(
-                        text: 'End',
-                        color: time.status.statusMessage == 'Dismissed' ? blackColor : secondaryColor,
-                        fontSize: 16,
-                      ),
-                      onPressed: time.status.statusMessage == 'Dismissed'
-                          ? () {
-                              WidgetNotificationSnackbar().render(
-                                context: context,
-                                message: 'Class already dismiss',
-                              );
-                            }
-                          : () {
-                              DateTime dateNow = DateTime.now();
-                              if (dateNow.isBefore(time.punchIn) || dateNow.isAfter(time.punchOut) || time.status.statusMessage == 'On going') {
-                                WidgetNotificationSnackbar().render(
-                                  context: context,
-                                  color: redColor,
-                                  message: 'Class can only dismissed at the scheduled time',
-                                );
-                              } else if (dateNow.isAfter(time.punchIn) && dateNow.isBefore(time.punchOut) && time.status.statusMessage == 'On going') {
-                                _handleUpdateButton(
-                                  parentContext: context,
-                                  statusMessage: 'Dismissed',
-                                  title: 'Are you sure want to dismiss the class?',
-                                  notificationMessage: 'Class dismiss',
-                                );
-                              } else {
-                                WidgetNotificationSnackbar().render(
-                                  context: context,
-                                  message: 'Class dismiss',
-                                );
-                              }
-                            },
-                    ),
-                    RaisedButton(
-                      color: time.status.statusMessage == 'Dismissed' ? greyColor3 : yellowColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                      child: WidgetFont(
                         text: 'Dismiss',
                         color: time.status.statusMessage == 'Dismissed' ? blackColor : secondaryColor,
                         fontSize: 16,
@@ -204,9 +171,15 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
                               );
                             }
                           : () {
+                              DateTime dateNow = DateTime.now();
                               _handleUpdateButton(
                                 parentContext: context,
-                                statusMessage: 'Dismissed',
+                                roomStatus: new RoomStatus(
+                                  status: true,
+                                  statusMessage: 'Dismissed',
+                                  startAt: time.status.startAt,
+                                  dismissAt: dateNow.isAfter(time.punchOut) ? time.status.dismissAt : dateNow.toLocal().toString(),
+                                ),
                                 title: 'Are you sure want to dismiss the class? (Class will be directly dismiss)',
                                 notificationMessage: 'Class dismiss',
                               );

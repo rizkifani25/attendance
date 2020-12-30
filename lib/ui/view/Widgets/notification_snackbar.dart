@@ -8,6 +8,7 @@ class WidgetNotificationSnackbar {
   WidgetNotificationSnackbar({this.color, this.message});
 
   render({BuildContext context, Color color, String message}) {
+    // ignore: deprecated_member_use
     return Scaffold.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,

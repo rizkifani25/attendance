@@ -31,8 +31,8 @@ class WidgetStudentCardDetailClass extends StatelessWidget {
   _handleSendPermission({BuildContext parentContext}) async {
     if (_studentPermissionController.text != '') {
       Permission permission = new Permission();
-      permission.reason = _studentPermissionController.text;
       permission.statusPermission = '';
+      permission.reason = _studentPermissionController.text;
       permission.datePermission = DateTime.now();
 
       BlocProvider.of<StudentBloc>(parentContext).add(
@@ -47,6 +47,7 @@ class WidgetStudentCardDetailClass extends StatelessWidget {
       Permission permission = new Permission();
       permission.reason = '';
       permission.statusPermission = '';
+      permission.datePermission = DateTime.now();
 
       BlocProvider.of<StudentBloc>(parentContext).add(
         StudentDoPermission(
@@ -171,46 +172,46 @@ class WidgetStudentCardDetailClass extends StatelessWidget {
                             }
                           : () {
                               DateTime dateNow = DateTime.now();
-                              // if ((dateNow.isBefore(time.punchIn) || dateNow.isAfter(time.punchOut))) {
-                              //   WidgetNotificationSnackbar().render(
-                              //     context: context,
-                              //     color: redColor,
-                              //     message: 'You can only attend at the scheduled time or when Lecturer already start the session.',
-                              //   );
-                              // } else if (dateNow.isAfter(time.punchIn) && dateNow.isBefore(time.punchOut) || time.status.statusMessage == 'On going') {
-                              //   Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) {
-                              //         return StudentAttendPage(
-                              //           cameras: cameras,
-                              //           student: student,
-                              //           roomId: roomDetail.roomId,
-                              //           time: time.time,
-                              //         );
-                              //       },
-                              //     ),
-                              //   );
-                              // } else {
-                              //   WidgetNotificationSnackbar().render(
-                              //     context: context,
-                              //     color: redColor,
-                              //     message: 'Class already dismissed',
-                              //   );
-                              // }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return StudentAttendPage(
-                                      cameras: cameras,
-                                      student: student,
-                                      roomId: roomDetail.roomId,
-                                      time: time.time,
-                                    );
-                                  },
-                                ),
-                              );
+                              if ((dateNow.isBefore(time.punchIn) || dateNow.isAfter(time.punchOut))) {
+                                WidgetNotificationSnackbar().render(
+                                  context: context,
+                                  color: redColor,
+                                  message: 'You can only attend at the scheduled time or when Lecturer already start the session.',
+                                );
+                              } else if (dateNow.isAfter(time.punchIn) && dateNow.isBefore(time.punchOut) && time.status.statusMessage == 'On going') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return StudentAttendPage(
+                                        cameras: cameras,
+                                        student: student,
+                                        roomId: roomDetail.roomId,
+                                        time: time.time,
+                                      );
+                                    },
+                                  ),
+                                );
+                              } else {
+                                WidgetNotificationSnackbar().render(
+                                  context: context,
+                                  color: redColor,
+                                  message: 'Class not yet started or already dismissed',
+                                );
+                              }
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) {
+                              //       return StudentAttendPage(
+                              //         cameras: cameras,
+                              //         student: student,
+                              //         roomId: roomDetail.roomId,
+                              //         time: time.time,
+                              //       );
+                              //     },
+                              //   ),
+                              // );
                             },
                     ),
                     RaisedButton(

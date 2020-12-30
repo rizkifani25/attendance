@@ -1,4 +1,4 @@
-import 'package:attendance/ui/view/Widgets/form_login_card.dart';
+import 'package:attendance/ui/view/Widgets/form_login/form_login.dart';
 import 'package:flutter/material.dart';
 
 class StudentLoginView extends StatelessWidget {
@@ -6,7 +6,7 @@ class StudentLoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      child: WidgetFormLogin(),
+      child: FormLogin(),
     );
   }
 }

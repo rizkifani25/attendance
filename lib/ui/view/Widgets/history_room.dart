@@ -85,6 +85,7 @@ class __RoomDetailState extends State<_RoomDetail> {
 
   @override
   void initState() {
+    date = '';
     if (widget.lecturer != null) {
       BlocProvider.of<RoomBloc>(context).add(
         GetInfoRoomHistory(
@@ -119,6 +120,7 @@ class __RoomDetailState extends State<_RoomDetail> {
                 padding: EdgeInsets.all(10),
                 child: Calendar(
                   onSelectedDate: (value) {
+                    print(value);
                     setState(() {
                       date = value;
                     });

@@ -7,11 +7,7 @@ class RoomRepository {
   RoomRepository({@required this.attendanceApi});
 
   Future<BasicResponse> getInfoRoomHistory({String studentId, String lecturerEmail, String date}) async {
-    BasicResponse basicResponse = await attendanceApi.getInfoRoomHistory(
-      studentId: studentId,
-      lecturerEmail: lecturerEmail,
-      date: date,
-    );
+    BasicResponse basicResponse = await attendanceApi.getInfoRoomHistory(studentId: studentId, lecturerEmail: lecturerEmail, date: date);
     return basicResponse;
   }
 

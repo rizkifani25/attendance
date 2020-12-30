@@ -36,11 +36,7 @@ class _BaseViewState extends State<BaseView> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      child: Stack(
-        children: <Widget>[
-          _buildWidgetMainHomePage(buildContext),
-        ],
-      ),
+      child: _buildWidgetMainHomePage(buildContext),
     );
   }
 
@@ -48,8 +44,9 @@ class _BaseViewState extends State<BaseView> {
     return Stack(
       children: <Widget>[
         PageView(
+          scrollDirection: Axis.horizontal,
           controller: _controller,
-          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: AlwaysScrollableScrollPhysics(),
           children: <Widget>[
             ClassPageContent(children: widget.classPageContentList ?? []),
             HomePageContent(children: widget.homePageContentList ?? []),

@@ -1,5 +1,4 @@
-import 'package:attendance/ui/view/Widgets/calendar.dart';
-import 'package:attendance/ui/view/Widgets/custom_dialog.dart';
+import 'package:attendance/ui/view/Student/Widgets/base_image_student.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,6 +81,24 @@ class _StudentBaseViewState extends State<StudentBaseView> {
                 Center(
                   child: WidgetFont(text: 'Profile', color: primaryColor, weight: FontWeight.bold),
                 ),
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                      child: WidgetFont(text: 'Base Picture', color: primaryColor, weight: FontWeight.bold, fontSize: 20),
+                    ),
+                    Container(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.refresh,
+                          color: primaryColor,
+                        ),
+                        onPressed: () => BlocProvider.of<AuthBloc>(context).add(AppLoadedStudent()),
+                      ),
+                    ),
+                  ],
+                ),
+                BaseImageStudent(cameras: widget.cameras),
                 WidgetLogOutButton(
                   handleSignOutButton: () => BlocProvider.of<AuthBloc>(context).add(StudentLoggedOut()),
                 ),

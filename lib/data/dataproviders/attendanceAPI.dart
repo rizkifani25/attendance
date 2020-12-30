@@ -105,6 +105,47 @@ class AttendanceApi {
     }
   }
 
+  Future<BasicResponse> studentDoUpdate(Student student) async {
+    BasicResponse basicResponse;
+    try {
+      await Firebase.initializeApp();
+      final String roomHistoryUrl = apiURL + 'student/update';
+      final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+      Map<String, String> requestHeaders = {'Content-type': 'application/json'};
+
+      File imageFile = new File(student.baseImagePath);
+
+      Reference ref = firebaseStorage.ref().child('base/' + student.studentId + '/' + student.studentId + '.jpg');
+      UploadTask uploadTask = ref.putFile(imageFile);
+      uploadTask.then((res) => print('upload success'));
+
+      student.baseImagePath = 'base/' + student.studentId + '/' + student.studentId + '.jpg';
+
+      Student updatedStudent = new Student();
+      updatedStudent.studentId = student.studentId;
+      updatedStudent.baseImagePath = student.baseImagePath;
+
+      var response = await http.post(
+        roomHistoryUrl,
+        headers: requestHeaders,
+        body: jsonEncode(updatedStudent.toJson()),
+      );
+
+      if (response.statusCode != 200) {
+        basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+        return basicResponse;
+      }
+
+      basicResponse = BasicResponse.fromJson(jsonDecode(response.body));
+
+      return basicResponse;
+    } catch (e) {
+      print(e.toString());
+      basicResponse = BasicResponse(responseCode: 400, responseMessage: 'Internal server error', data: []);
+      return basicResponse;
+    }
+  }
+
   Future<BasicResponse> studentDoAttend(AttendStudent _attendStudent, String _roomId, String _studentId, String _time) async {
     BasicResponse basicResponse;
 
@@ -127,8 +168,6 @@ class AttendanceApi {
       attendStudentRequest.roomId = _roomId;
       attendStudentRequest.studentId = _studentId;
       attendStudentRequest.time = _time;
-
-      print(jsonEncode(attendStudentRequest.toJson()));
 
       var response = await http.post(
         roomHistoryUrl,
@@ -168,14 +207,11 @@ class AttendanceApi {
 
       _outStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '.jpg';
 
-      print('masuk sini');
       OutStudentRequest outStudentRequest = new OutStudentRequest();
       outStudentRequest.outStudent = _outStudent;
       outStudentRequest.roomId = _roomId;
       outStudentRequest.studentId = _studentId;
       outStudentRequest.time = _time;
-
-      print(jsonEncode(outStudentRequest.toJson()));
 
       var response = await http.post(
         roomHistoryUrl,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 // URI
-final String apiURL = 'https://101e18720af4.ngrok.io/';
+final String apiURL = 'https://attendance-server-js.herokuapp.com/';
+// final String apiURL = 'https://87a50ccd4923.ngrok.io/';
 
 // position
 final double latitudeBuildingA = -6.284903;

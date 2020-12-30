@@ -4,6 +4,7 @@ import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/ui/logic/bloc/bloc.dart';
 import 'package:attendance/ui/view/Widgets/custom_dialog.dart';
 import 'package:attendance/ui/view/Widgets/loading_indicator.dart';
+import 'package:attendance/ui/view/Widgets/notification_snackbar.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -153,19 +154,7 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
   void logError(String code, String message) => print('Error: $code\nMessage: $message');
 
   void _handleAttendButton({BuildContext parentContext}) async {
-    if (imagePath != null) {
-      AttendStudent _attendStudent = new AttendStudent();
-      PositionStudent _positionStudent = new PositionStudent();
-
-      _attendStudent.distance = _distance;
-      _attendStudent.image = imagePath;
-
-      _positionStudent.latitude = position.latitude;
-      _positionStudent.longitude = position.longitude;
-
-      _attendStudent.positionStudent = _positionStudent;
-      _attendStudent.time = DateTime.now();
-
+    if (widget.student.baseImagePath == '') {
       return showDialog(
         context: parentContext,
         builder: (BuildContext context) {
@@ -175,7 +164,7 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  'Are you sure want to attend the class?',
+                  'You don\'t have any base image, please upload it from profile menu for recognize!',
                   style: TextStyle(fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
@@ -185,17 +174,9 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
                 child: FlatButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    BlocProvider.of<StudentBloc>(context).add(
-                      StudentDoAttend(
-                        attendStudent: _attendStudent,
-                        roomId: widget.roomId,
-                        studentId: widget.student.studentId,
-                        time: widget.time,
-                      ),
-                    );
                   },
                   child: Text(
-                    'Yes',
+                    'OK',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
@@ -204,23 +185,70 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
           );
         },
       );
+    } else {
+      if (imagePath != null) {
+        AttendStudent _attendStudent = new AttendStudent();
+        PositionStudent _positionStudent = new PositionStudent();
+
+        _attendStudent.distance = _distance;
+        _attendStudent.image = imagePath;
+
+        _positionStudent.latitude = position.latitude;
+        _positionStudent.longitude = position.longitude;
+
+        _attendStudent.positionStudent = _positionStudent;
+        _attendStudent.time = DateTime.now();
+
+        return showDialog(
+          context: parentContext,
+          builder: (BuildContext context) {
+            return CustomDialogBox(
+              children: [
+                SizedBox(height: 50),
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Are you sure want to attend the class?',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      BlocProvider.of<StudentBloc>(context).add(
+                        StudentDoAttend(
+                          attendStudent: _attendStudent,
+                          roomId: widget.roomId,
+                          studentId: widget.student.studentId,
+                          time: widget.time,
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Yes',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        WidgetNotificationSnackbar().render(
+          color: redColor,
+          context: parentContext,
+          message: 'Something weird happen, please retry',
+        );
+      }
     }
   }
 
   void _handleOutButton({BuildContext parentContext}) async {
-    if (imagePath != null) {
-      OutStudent _outStudent = new OutStudent();
-      PositionStudent _positionStudent = new PositionStudent();
-
-      _outStudent.distance = _distance;
-      _outStudent.image = imagePath;
-
-      _positionStudent.latitude = position.latitude;
-      _positionStudent.longitude = position.longitude;
-
-      _outStudent.positionStudent = _positionStudent;
-      _outStudent.time = DateTime.now();
-
+    if (widget.student.baseImagePath == '') {
       return showDialog(
         context: parentContext,
         builder: (BuildContext context) {
@@ -230,7 +258,7 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  'Are you sure want to out the class?',
+                  'You don\'t have any base image, please upload it from profile menu for recognize!',
                   style: TextStyle(fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
@@ -240,17 +268,9 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
                 child: FlatButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    BlocProvider.of<StudentBloc>(context).add(
-                      StudentDoOut(
-                        outStudent: _outStudent,
-                        roomId: widget.roomId,
-                        studentId: widget.student.studentId,
-                        time: widget.time,
-                      ),
-                    );
                   },
                   child: Text(
-                    'Yes',
+                    'OK',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
@@ -259,6 +279,59 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
           );
         },
       );
+    } else {
+      if (imagePath != null) {
+        OutStudent _outStudent = new OutStudent();
+        PositionStudent _positionStudent = new PositionStudent();
+
+        _outStudent.distance = _distance;
+        _outStudent.image = imagePath;
+
+        _positionStudent.latitude = position.latitude;
+        _positionStudent.longitude = position.longitude;
+
+        _outStudent.positionStudent = _positionStudent;
+        _outStudent.time = DateTime.now();
+
+        return showDialog(
+          context: parentContext,
+          builder: (BuildContext context) {
+            return CustomDialogBox(
+              children: [
+                SizedBox(height: 50),
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Are you sure want to out the class?',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      BlocProvider.of<StudentBloc>(context).add(
+                        StudentDoOut(
+                          outStudent: _outStudent,
+                          roomId: widget.roomId,
+                          studentId: widget.student.studentId,
+                          time: widget.time,
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Yes',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 

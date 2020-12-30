@@ -27,28 +27,26 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   permission_handler: ^4.2.0+hotfix.3
-  cupertino_icons:
-  sliding_up_panel:  
-  camera: 
-  path_provider: 
-  flutter_launcher_icons:
-  bloc:
-  equatable:
-  flutter_bloc:
-  fluttertoast:
-  flutter_spinkit:
-  shared_preferences:
-  http:
-  badges:
-  expandable:
-  geolocator:
-  firebase_storage:
-  firebase_core:
-  shimmer:
-  connectivity:
-  page_transition:
-  date_picker_timeline:
-  syncfusion_flutter_datepicker:
+  cupertino_icons: ^1.0.2
+  sliding_up_panel: ^1.0.2 
+  camera: ^0.5.8+11
+  path_provider: ^1.6.24
+  flutter_launcher_icons: ^0.8.1
+  equatable: ^1.2.5
+  flutter_bloc: ^6.1.1
+  flutter_spinkit: ^4.1.2
+  shared_preferences: ^0.5.12+4
+  http: ^0.12.2
+  badges: ^1.1.6
+  expandable: ^4.1.4
+  geolocator: ^6.1.13
+  firebase_storage: ^5.2.0
+  firebase_core: ^0.5.3
+  firebase_analytics: ^6.3.0 
+  shimmer: ^1.1.2
+  connectivity: ^2.0.2
+  page_transition: ^1.1.7+5
+  syncfusion_flutter_datepicker: ^18.4.31-beta
   
     
 dev_dependencies:
@@ -90,6 +88,7 @@ flutter:
     - assets/images/bg-main4.jpg
     - assets/images/ic_switch_camera_3.png
     - assets/images/ic_shutter_1.png
+    - assets/images/img_not_found.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

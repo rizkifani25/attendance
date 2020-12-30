@@ -1,5 +1,8 @@
 import 'package:attendance/constant/Constant.dart';
 import 'package:attendance/models/models.dart';
+import 'package:attendance/ui/view/Widgets/custom_dialog.dart';
+import 'package:attendance/ui/view/Widgets/expandable_card/attend_info.dart';
+import 'package:attendance/ui/view/Widgets/table_row_basic.dart';
 import 'package:flutter/material.dart';
 
 class StudentHistoryCard extends StatelessWidget {
@@ -8,6 +11,9 @@ class StudentHistoryCard extends StatelessWidget {
   final Student student;
 
   StudentHistoryCard({this.roomDetail, this.time, this.student});
+
+  final TextStyle textStyleTableHead = TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: primaryColor);
+  final TextStyle textStyleTableCell = TextStyle(fontSize: 13);
 
   Enrolled _getStudentEnrolledDetail() {
     Enrolled enrolled;
@@ -19,15 +25,139 @@ class StudentHistoryCard extends StatelessWidget {
     return enrolled;
   }
 
+  _handleTapMoreDetailPermission({BuildContext parentContext, Student student, Permission permission}) {
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return CustomDialogBox(
+          children: [
+            SizedBox(height: 50),
+            Center(child: Text('Permission')),
+            Table(
+              border: TableBorder.all(color: greyColor3, width: 1, style: BorderStyle.solid),
+              children: [
+                TableRowBasic().render(
+                  tableHead: Text('Reason', style: textStyleTableHead),
+                  tableCell: Text(permission.reason, style: textStyleTableCell),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _handleTapMoreDetailAttend({BuildContext parentContext, AttendStudent attendStudent}) {
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return CustomDialogBox(
+          children: [
+            SizedBox(height: 50),
+            Center(child: Text('Detail Attend')),
+            AttendOutInfo(attendStudent: attendStudent),
+          ],
+        );
+      },
+    );
+  }
+
+  _handleTapMoreDetailOut({BuildContext parentContext, OutStudent outStudent}) {
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return CustomDialogBox(
+          children: [
+            SizedBox(height: 50),
+            Center(child: Text('Detail Out')),
+            AttendOutInfo(outStudent: outStudent),
+          ],
+        );
+      },
+    );
+  }
+
+  _handleTapDetail({BuildContext parentContext}) {
+    Enrolled enrolledStudent = _getStudentEnrolledDetail();
+
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return CustomDialogBox(
+          children: [
+            SizedBox(height: 50),
+            Center(child: Text('Enrolled')),
+            Padding(
+              padding: EdgeInsets.all(3),
+              child: Table(
+                border: TableBorder.all(color: greyColor3, width: 1, style: BorderStyle.solid),
+                children: [
+                  TableRowBasic().render(
+                    tableHead: Column(
+                      children: [
+                        Text(
+                          enrolledStudent.student.studentId,
+                          style: textStyleTableHead,
+                        ),
+                        Text(
+                          enrolledStudent.student.studentName,
+                          textAlign: TextAlign.center,
+                          style: textStyleTableCell,
+                        ),
+                      ],
+                    ),
+                    tableCell: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(3),
+                          child: GestureDetector(
+                            child: Icon(
+                              Icons.info_rounded,
+                              size: 20,
+                              color: enrolledStudent.permission.reason == '' ? greyColor3 : primaryColor,
+                            ),
+                            onTap: () => _handleTapMoreDetailPermission(parentContext: context, student: enrolledStudent.student, permission: enrolledStudent.permission),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(3),
+                          child: GestureDetector(
+                            child: Icon(
+                              Icons.login_rounded,
+                              size: 20,
+                              color: enrolledStudent.attendStudent.distance == 0 ? greyColor3 : primaryColor,
+                            ),
+                            onTap: () => _handleTapMoreDetailAttend(parentContext: context, attendStudent: enrolledStudent.attendStudent),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(3),
+                          child: GestureDetector(
+                            child: Icon(
+                              Icons.logout,
+                              size: 20,
+                              color: enrolledStudent.outStudent.distance == 0 ? greyColor3 : primaryColor,
+                            ),
+                            onTap: () => _handleTapMoreDetailOut(parentContext: context, outStudent: enrolledStudent.outStudent),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Enrolled enrolledStudent = _getStudentEnrolledDetail();
-
-    TextStyle textStyleTableHead = TextStyle(fontSize: 13, fontWeight: FontWeight.bold);
-    TextStyle textStyleTableCell = TextStyle(fontSize: 13);
-    TextStyle textStyleTableCellChild = TextStyle(fontSize: 13);
-
-    return InkWell(
+    return GestureDetector(
       child: Container(
         margin: EdgeInsets.all(10),
         width: MediaQuery.of(context).size.width,
@@ -36,23 +166,7 @@ class StudentHistoryCard extends StatelessWidget {
           child: Table(
             border: TableBorder.all(color: greyColor3, width: 1, style: BorderStyle.solid),
             children: [
-              _tableRowBasic(
-                tableHead: Text('Room ID', style: textStyleTableHead),
-                tableCell: Text(
-                  roomDetail.roomId,
-                  textAlign: TextAlign.end,
-                  style: textStyleTableCell,
-                ),
-              ),
-              _tableRowBasic(
-                tableHead: Text('Room Name', style: textStyleTableHead),
-                tableCell: Text(
-                  roomDetail.roomName,
-                  textAlign: TextAlign.end,
-                  style: textStyleTableCell,
-                ),
-              ),
-              _tableRowBasic(
+              TableRowBasic().render(
                 tableHead: Text('Date', style: textStyleTableHead),
                 tableCell: Text(
                   roomDetail.date,
@@ -60,7 +174,7 @@ class StudentHistoryCard extends StatelessWidget {
                   style: textStyleTableCell,
                 ),
               ),
-              _tableRowBasic(
+              TableRowBasic().render(
                 tableHead: Text('Time', style: textStyleTableHead),
                 tableCell: Text(
                   time.time,
@@ -68,7 +182,7 @@ class StudentHistoryCard extends StatelessWidget {
                   style: textStyleTableCell,
                 ),
               ),
-              _tableRowBasic(
+              TableRowBasic().render(
                 tableHead: Text('Room Status', style: textStyleTableHead),
                 tableCell: Text(
                   time.status.statusMessage,
@@ -76,7 +190,7 @@ class StudentHistoryCard extends StatelessWidget {
                   style: textStyleTableCell,
                 ),
               ),
-              _tableRowBasic(
+              TableRowBasic().render(
                 tableHead: Text('Subject', style: textStyleTableHead),
                 tableCell: Text(
                   time.subject,
@@ -84,7 +198,7 @@ class StudentHistoryCard extends StatelessWidget {
                   style: textStyleTableCell,
                 ),
               ),
-              _tableRowBasic(
+              TableRowBasic().render(
                 tableHead: Text('Lecturer Name', style: textStyleTableHead),
                 tableCell: Text(
                   time.lecturer.lecturerName,
@@ -92,7 +206,7 @@ class StudentHistoryCard extends StatelessWidget {
                   style: textStyleTableCell,
                 ),
               ),
-              _tableRowBasic(
+              TableRowBasic().render(
                 tableHead: Text('Lecturer Email', style: textStyleTableHead),
                 tableCell: Text(
                   time.lecturer.lecturerEmail,
@@ -100,155 +214,11 @@ class StudentHistoryCard extends StatelessWidget {
                   style: textStyleTableCell,
                 ),
               ),
-              _tableRowBasic(
-                tableHead: Text('Attend', style: textStyleTableHead),
-                tableCell: Table(
-                  border: TableBorder.all(color: greyColor3, width: 1, style: BorderStyle.solid),
-                  children: [
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Status (photo)',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.statusAttendance.byPhoto,
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    ),
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Status (distance)',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.statusAttendance.byDistance + '(' + enrolledStudent.attendStudent.distance.toStringAsFixed(2) + ')',
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    ),
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Time',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.attendStudent.time.toLocal().toString(),
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _tableRowBasic(
-                tableHead: Text('Out', style: textStyleTableHead),
-                tableCell: Table(
-                  border: TableBorder.all(color: greyColor3, width: 1, style: BorderStyle.solid),
-                  children: [
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Status (photo)',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.outStudent.image,
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    ),
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Status (distance)',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.statusAttendance.byDistance + '(' + enrolledStudent.outStudent.distance.toStringAsFixed(2) + ')',
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    ),
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Time',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.attendStudent.time.toLocal().toString(),
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _tableRowBasic(
-                tableHead: Text('Permission', style: textStyleTableHead),
-                tableCell: Table(
-                  border: TableBorder.all(color: greyColor3, width: 1, style: BorderStyle.solid),
-                  children: [
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Status',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.permission.statusPermission,
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    ),
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Reason',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.permission.reason,
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    ),
-                    _tableRowBasic(
-                      tableHead: Text(
-                        'Last Update',
-                        style: textStyleTableCellChild,
-                      ),
-                      tableCell: Text(
-                        enrolledStudent.permission.datePermission.toLocal().toString(),
-                        textAlign: TextAlign.end,
-                        style: textStyleTableCellChild,
-                      ),
-                    )
-                  ],
-                ),
-              ),
             ],
           ),
         ),
       ),
-      onTap: () {
-        print('ON TAP');
-      },
-    );
-  }
-
-  TableRow _tableRowBasic({Widget tableHead, Widget tableCell}) {
-    return TableRow(
-      children: [
-        TableCell(
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: tableHead,
-          ),
-        ),
-        TableCell(
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: tableCell,
-          ),
-        ),
-      ],
+      onTap: () => _handleTapDetail(parentContext: context),
     );
   }
 }

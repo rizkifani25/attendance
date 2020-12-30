@@ -1,16 +1,17 @@
 class RoomStatus {
-  int id;
   bool status;
   String statusMessage;
+  String startAt;
+  String dismissAt;
 
-  RoomStatus({this.id, this.status, this.statusMessage});
+  RoomStatus({this.status, this.statusMessage, this.dismissAt, this.startAt});
 
   List<RoomStatus> getRoomStatusList() {
     return <RoomStatus>[
-      RoomStatus(id: 1, status: true, statusMessage: 'Booked'),
-      RoomStatus(id: 2, status: true, statusMessage: 'Dismissed'),
-      RoomStatus(id: 3, status: false, statusMessage: 'Available'),
-      RoomStatus(id: 4, status: true, statusMessage: 'On going'),
+      RoomStatus(status: true, statusMessage: 'Booked'),
+      RoomStatus(status: true, statusMessage: 'Dismissed'),
+      RoomStatus(status: false, statusMessage: 'Available'),
+      RoomStatus(status: true, statusMessage: 'On going'),
     ];
   }
 
@@ -18,6 +19,8 @@ class RoomStatus {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     data['status_message'] = this.statusMessage;
+    data['start_at'] = this.startAt;
+    data['dismiss_at'] = this.dismissAt;
     return data;
   }
 
@@ -25,6 +28,8 @@ class RoomStatus {
     return RoomStatus(
       status: json['status'],
       statusMessage: json['status_message'],
+      startAt: json['start_at'],
+      dismissAt: json['dismiss_at'],
     );
   }
 }

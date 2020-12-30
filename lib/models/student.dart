@@ -6,9 +6,10 @@ class Student {
   String password;
   String batch;
   String major;
+  String baseImagePath;
   List<RoomHistory> historyRoom;
 
-  Student({this.studentId, this.studentName, this.password, this.batch, this.major, this.historyRoom});
+  Student({this.studentId, this.studentName, this.password, this.batch, this.major, this.baseImagePath, this.historyRoom});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
@@ -17,6 +18,7 @@ class Student {
     data["password"] = this.password;
     data["batch"] = this.batch;
     data["major"] = this.major;
+    data["base_image"] = this.baseImagePath;
     data["history_room"] = this.historyRoom;
     return data;
   }
@@ -32,6 +34,7 @@ class Student {
         password: json['password'],
         batch: json['batch'],
         major: json['major'],
+        baseImagePath: json['base_image'],
         historyRoom: _historyRoom,
       );
     } else {
@@ -41,6 +44,7 @@ class Student {
         password: json['password'],
         batch: json['batch'],
         major: json['major'],
+        baseImagePath: json['base_image'],
         historyRoom: json['history_room'],
       );
     }

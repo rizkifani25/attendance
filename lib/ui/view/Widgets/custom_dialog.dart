@@ -18,8 +18,8 @@ class CustomDialogBox extends StatelessWidget {
         constraints: BoxConstraints(
           minHeight: 100,
           minWidth: 100,
-          maxWidth: MediaQuery.of(context).size.width - 50,
-          maxHeight: MediaQuery.of(context).size.height - 50,
+          maxWidth: MediaQuery.of(context).size.width - 5,
+          maxHeight: MediaQuery.of(context).size.height - 5,
         ),
         child: Stack(
           children: <Widget>[
@@ -27,8 +27,8 @@ class CustomDialogBox extends StatelessWidget {
               constraints: BoxConstraints(
                 minHeight: 100,
                 minWidth: 100,
-                maxWidth: MediaQuery.of(context).size.width * 0.9,
-                maxHeight: MediaQuery.of(context).size.height * 0.5,
+                maxWidth: MediaQuery.of(context).size.width * 0.95,
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
               ),
               child: Card(
                 elevation: 5,

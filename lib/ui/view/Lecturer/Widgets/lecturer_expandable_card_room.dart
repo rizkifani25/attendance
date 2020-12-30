@@ -48,6 +48,7 @@ class WidgetLecturerExpandableCardRoom extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: Text(
                       roomDetail.roomId,
+                      // ignore: deprecated_member_use
                       style: Theme.of(context).textTheme.body2,
                     ),
                   ),

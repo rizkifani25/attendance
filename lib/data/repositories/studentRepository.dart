@@ -22,6 +22,11 @@ class StudentRepository {
     return null;
   }
 
+  Future<BasicResponse> studentDoUpdate(Student student) async {
+    BasicResponse basicResponse = await attendanceApi.studentDoUpdate(student);
+    return basicResponse;
+  }
+
   Future<BasicResponse> studentDoPermission(Permission _permission, String _roomId, String _studentId, String _time) async {
     BasicResponse basicResponse = await attendanceApi.studentDoPermission(_permission, _roomId, _studentId, _time);
     return basicResponse;

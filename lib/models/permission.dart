@@ -5,6 +5,14 @@ class Permission {
 
   Permission({this.statusPermission, this.reason, this.datePermission});
 
+  List<Permission> getStatusPermission() {
+    return <Permission>[
+      Permission(statusPermission: ''),
+      Permission(statusPermission: 'Approved'),
+      Permission(statusPermission: 'Rejected'),
+    ];
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['status_permission'] = this.statusPermission;

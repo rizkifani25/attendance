@@ -27,17 +27,31 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     if (event is StudentDoOut) {
       yield* _mapStudentDoOutToState(event);
     }
+    if (event is StudentDoUpdate) {
+      yield* _mapStudentDoUpdateToState(event);
+    }
+  }
+
+  Stream<StudentState> _mapStudentDoUpdateToState(StudentDoUpdate event) async* {
+    yield StudentFetchLoading();
+    try {
+      final BasicResponse basicResponse = await studentRepository.studentDoUpdate(event.student);
+
+      if (basicResponse != null) {
+        yield StudentFetchSuccess();
+      } else {
+        yield StudentFetchFailed(message: 'Failed when fetching');
+      }
+    } catch (e) {
+      print(e.toString());
+      yield StudentFetchFailed(message: 'Something very weird just happened');
+    }
   }
 
   Stream<StudentState> _mapStudentDoPermissionToState(StudentDoPermission event) async* {
     yield StudentFetchLoading();
     try {
-      final BasicResponse basicResponse = await studentRepository.studentDoPermission(
-        event.permission,
-        event.roomId,
-        event.studentId,
-        event.time,
-      );
+      final BasicResponse basicResponse = await studentRepository.studentDoPermission(event.permission, event.roomId, event.studentId, event.time);
 
       if (basicResponse != null) {
         yield StudentFetchSuccess();
@@ -53,12 +67,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   Stream<StudentState> _mapStudentDoAttendToState(StudentDoAttend event) async* {
     yield StudentFetchLoading();
     try {
-      final BasicResponse basicResponse = await studentRepository.studentDoAttend(
-        event.attendStudent,
-        event.roomId,
-        event.studentId,
-        event.time,
-      );
+      final BasicResponse basicResponse = await studentRepository.studentDoAttend(event.attendStudent, event.roomId, event.studentId, event.time);
 
       if (basicResponse != null) {
         yield StudentFetchSuccess();
@@ -74,12 +83,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   Stream<StudentState> _mapStudentDoOutToState(StudentDoOut event) async* {
     yield StudentFetchLoading();
     try {
-      final BasicResponse basicResponse = await studentRepository.studentDoOut(
-        event.outStudent,
-        event.roomId,
-        event.studentId,
-        event.time,
-      );
+      final BasicResponse basicResponse = await studentRepository.studentDoOut(event.outStudent, event.roomId, event.studentId, event.time);
 
       if (basicResponse != null) {
         yield StudentFetchSuccess();

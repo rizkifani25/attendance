@@ -53,9 +53,13 @@ class WidgetCardInfoStudent extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     margin: EdgeInsets.all(10),
                     padding: EdgeInsets.all(5.0),
-                    child: CircleAvatar(
-                      radius: 35,
-                      backgroundImage: NetworkImage('https://via.placeholder.com/140x100'),
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(55)),
+                        color: greyColor3,
+                      ),
                     ),
                   ),
                 ],
