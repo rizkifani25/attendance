@@ -101,7 +101,11 @@ class LecturerHistoryCard extends StatelessWidget {
                             child: Icon(
                               Icons.info_rounded,
                               size: 20,
-                              color: e.permission.reason == '' ? greyColor3 : primaryColor,
+                              color: e.permission.reason == ''
+                                  ? greyColor3
+                                  : e.permission.statusPermission == 'Approved'
+                                      ? greenColor
+                                      : redColor,
                             ),
                             onTap: () => _handleTapMoreDetailPermission(parentContext: context, student: e.student, permission: e.permission),
                           ),
@@ -112,7 +116,7 @@ class LecturerHistoryCard extends StatelessWidget {
                             child: Icon(
                               Icons.login_rounded,
                               size: 20,
-                              color: e.attendStudent.distance == 0 ? greyColor3 : primaryColor,
+                              color: e.attendStudent.distance > 0 && e.attendStudent.distance <= 5 ? greenColor : redColor,
                             ),
                             onTap: () => _handleTapMoreDetailAttend(parentContext: context, attendStudent: e.attendStudent),
                           ),
@@ -123,7 +127,11 @@ class LecturerHistoryCard extends StatelessWidget {
                             child: Icon(
                               Icons.logout,
                               size: 20,
-                              color: e.outStudent.distance == 0 ? greyColor3 : primaryColor,
+                              color: e.outStudent.distance == 0
+                                  ? greyColor3
+                                  : e.outStudent.distance > 0 && e.outStudent.distance <= 5
+                                      ? greenColor
+                                      : redColor,
                             ),
                             onTap: () => _handleTapMoreDetailOut(parentContext: context, outStudent: e.outStudent),
                           ),

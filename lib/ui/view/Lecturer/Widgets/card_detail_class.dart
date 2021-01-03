@@ -146,11 +146,17 @@ class WidgetLecturerCardDetailClass extends StatelessWidget {
                                   notificationMessage: 'Class started',
                                   title: 'Are you sure want to start the class?',
                                 );
+                              } else if (time.status.statusMessage != 'Booked') {
+                                WidgetNotificationSnackbar().render(
+                                  context: context,
+                                  color: redColor,
+                                  message: 'Class must be booked first. Current status : ' + time.status.statusMessage,
+                                );
                               } else {
                                 WidgetNotificationSnackbar().render(
                                   context: context,
                                   color: redColor,
-                                  message: time.status.statusMessage,
+                                  message: 'Current status : ' + time.status.statusMessage,
                                 );
                               }
                             },

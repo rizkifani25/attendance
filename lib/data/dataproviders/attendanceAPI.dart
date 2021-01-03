@@ -161,7 +161,7 @@ class AttendanceApi {
       UploadTask uploadTask = ref.putFile(imageFile);
       uploadTask.then((res) => print('upload success'));
 
-      _attendStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '.jpg';
+      _attendStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/in/' + _studentId + '-validated.jpg';
 
       AttendStudentRequest attendStudentRequest = new AttendStudentRequest();
       attendStudentRequest.attendStudent = _attendStudent;
@@ -205,7 +205,7 @@ class AttendanceApi {
       UploadTask uploadTask = ref.putFile(imageFile);
       uploadTask.then((res) => print('upload success'));
 
-      _outStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '.jpg';
+      _outStudent.image = 'attendance/' + _roomId + '/' + _studentId + '/out/' + _studentId + '-validated.jpg';
 
       OutStudentRequest outStudentRequest = new OutStudentRequest();
       outStudentRequest.outStudent = _outStudent;

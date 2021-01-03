@@ -40,6 +40,10 @@ class StudentHistoryCard extends StatelessWidget {
                   tableHead: Text('Reason', style: textStyleTableHead),
                   tableCell: Text(permission.reason, style: textStyleTableCell),
                 ),
+                TableRowBasic().render(
+                  tableHead: Text('Status', style: textStyleTableHead),
+                  tableCell: Text(permission.statusPermission, style: textStyleTableCell),
+                ),
               ],
             ),
           ],
@@ -116,7 +120,11 @@ class StudentHistoryCard extends StatelessWidget {
                             child: Icon(
                               Icons.info_rounded,
                               size: 20,
-                              color: enrolledStudent.permission.reason == '' ? greyColor3 : primaryColor,
+                              color: enrolledStudent.permission.reason == ''
+                                  ? greyColor3
+                                  : enrolledStudent.permission.statusPermission == 'Approved'
+                                      ? greenColor
+                                      : redColor,
                             ),
                             onTap: () => _handleTapMoreDetailPermission(parentContext: context, student: enrolledStudent.student, permission: enrolledStudent.permission),
                           ),
@@ -127,7 +135,7 @@ class StudentHistoryCard extends StatelessWidget {
                             child: Icon(
                               Icons.login_rounded,
                               size: 20,
-                              color: enrolledStudent.attendStudent.distance == 0 ? greyColor3 : primaryColor,
+                              color: enrolledStudent.attendStudent.distance > 0 && enrolledStudent.attendStudent.distance <= 5 ? greenColor : redColor,
                             ),
                             onTap: () => _handleTapMoreDetailAttend(parentContext: context, attendStudent: enrolledStudent.attendStudent),
                           ),
@@ -138,7 +146,11 @@ class StudentHistoryCard extends StatelessWidget {
                             child: Icon(
                               Icons.logout,
                               size: 20,
-                              color: enrolledStudent.outStudent.distance == 0 ? greyColor3 : primaryColor,
+                              color: enrolledStudent.outStudent.distance == 0
+                                  ? greyColor3
+                                  : enrolledStudent.outStudent.distance > 0 && enrolledStudent.outStudent.distance <= 5
+                                      ? greenColor
+                                      : redColor,
                             ),
                             onTap: () => _handleTapMoreDetailOut(parentContext: context, outStudent: enrolledStudent.outStudent),
                           ),

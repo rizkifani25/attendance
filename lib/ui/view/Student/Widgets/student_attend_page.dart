@@ -361,6 +361,14 @@ class _StudentAttendPageState extends State<StudentAttendPage> with WidgetsBindi
         child: Stack(
           children: <Widget>[
             CameraPreview(controller),
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/face.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(

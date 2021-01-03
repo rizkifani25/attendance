@@ -61,7 +61,7 @@ class AttendOutInfo extends StatelessWidget {
             tableCell: Container(
               height: 300,
               width: 300,
-              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
               child: FutureBuilder(
                 future: _getImage(context, attendStudent != null ? attendStudent.image : outStudent.image),
                 builder: (context, snapshot) {
@@ -93,7 +93,7 @@ class AttendOutInfo extends StatelessWidget {
       await FireBaseStorageService.loadImage(context, image).then((downloadUrl) {
         m = Image.network(
           downloadUrl.toString(),
-          fit: BoxFit.scaleDown,
+          fit: BoxFit.contain,
         );
       }).catchError((onError) {
         m = Text('Image not found');
