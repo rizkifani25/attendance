@@ -10,4 +10,4 @@ Firebase Storage
 ```
 
 ### *Preview*
-![Gif UI](https://github.com/rizkifani25/attendance-gallery/blob/master/ui-admin/ui.gif)
+![Gif UI](https://github.com/rizkifani25/attendance-gallery/blob/master/attendance-mobile.gif)
